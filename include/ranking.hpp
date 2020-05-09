@@ -419,6 +419,38 @@ namespace stats {
             return ret;
         }
     };
+
+    /**
+     * N.B. There are faster algorithms for counting inversions.
+     * Tested.
+     * computes the normalized Kendall tau distance of two rankings. Assumes the rankings are the same size and that
+     * the first data set is sorted.
+     * @tparam Iterator
+     * @param first1
+     * @param last1
+     * @param first2
+     * @return
+     */
+    template <class Iterator>
+    double norm_kendall_tau_dist_sorted(Iterator first1, Iterator last1, Iterator first2) {
+        assert(first1 != last1);
+        if (first1 == last1) {
+            throw std::logic_error("Attempting to find the normalized Kendall tau distance of empty vectors!");
+        }
+
+        auto size = std::distance(first1, last1);
+        int inversion_count = 0;
+
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = i + 1; j < size; j++) {
+                if (*(first2 + j) < *(first2 + i)) {
+                    inversion_count++;
+                }
+            }
+        }
+
+        return 2. * ((double)inversion_count / (size * (size - 1)));
+    }
 };
 
 #endif //STATS_RANKING_HPP
