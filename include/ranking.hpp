@@ -1,4 +1,11 @@
 //
+// Created by Zach Bortoff on 2020-05-09.
+//
+
+#ifndef STATS_RANKING_HPP
+#define STATS_RANKING_HPP
+
+//
 // Created by Zach Bortoff on 2020-03-08.
 //
 
@@ -13,9 +20,6 @@
  * 4.) Optimize iteration step in glicko2 algorithm.
  * 5.) Write documentation.
  */
-
-#ifndef ATROPOS_CHESS_HPP
-#define ATROPOS_CHESS_HPP
 
 /// Standard Library Includes
 #include <vector>
@@ -417,4 +421,4 @@ namespace stats {
     };
 };
 
-#endif //ATROPOS_CHESS_HPP
+#endif //STATS_RANKING_HPP

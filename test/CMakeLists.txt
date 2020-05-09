@@ -14,12 +14,12 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_executable(StatsTest stats_test.cpp)
 add_executable(BootstrapTest bootstrap_test.cpp)
-add_executable(ChessTest chess_test.cpp)
+add_executable(RankingTest ranking_test.cpp)
 
 target_link_libraries(StatsTest Threads::Threads ${GTEST_LIBRARIES} GSL::gsl GSL::gslcblas)
 target_link_libraries(BootstrapTest Threads::Threads ${GTEST_LIBRARIES})
-target_link_libraries(ChessTest Threads::Threads ${GTEST_LIBRARIES})
+target_link_libraries(RankingTest Threads::Threads ${GTEST_LIBRARIES})
 
 add_test(StatsTest StatsTest)
 add_test(BootstrapTest BootstrapTest)
-add_test(ChessTest ChessTest)
+add_test(RankingTest RankingTest)
