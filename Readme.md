@@ -1,8 +1,10 @@
 stats
 =======
-stats is a header-only statistics, probability, and combinatorics C++ library.
+stats is a header-only statistics and probability library in C++.
 
-N.B. The documentation is forthcoming. The combinatorics and probability functions are a work in progress.
+Some of the functions support using Eigen::VectorXd and Eigen::MatrixXd objects. The functions that don't support them, will hopefully support them soon. 
+
+N.B. The documentation is forthcoming. The library itself is still a work in progress.
 
 Getting Started
 ---------------
@@ -16,9 +18,6 @@ Getting Started
 git clone https://github.com/zborffs/stats.git
 ```
 3.    Copy the contents of the "include" directory of _this_ project into _your_ project
-
-Ex. 
-![alt text](docs/res/IncludeDirectory.png "Copy-Paste!")
 
 4.    Include the directory in the compilation
 
