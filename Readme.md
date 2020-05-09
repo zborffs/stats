@@ -15,7 +15,7 @@ Getting Started
 
 2.    Clone this repository
 ```commandline
-git clone https://github.com/zborffs/stats.git
+git clone https://gitlab.com/zborffs/eigenstats.git
 ```
 3.    Copy the contents of the "include" directory of _this_ project into _your_ project
 
