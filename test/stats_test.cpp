@@ -19,8 +19,8 @@
 #include "stats.hpp"
 
 /// This is arbitrary, but std::numeric_limits<double>::min() is like 120 orders of magnitude off.
-constexpr double DESIRED_SIG_FIG_ERROR = 10;
-constexpr double ERROR = 0.5 * gcem::pow(10, 2 - DESIRED_SIG_FIG_ERROR);
+double DESIRED_SIG_FIG_ERROR = 10;
+double ERROR = 0.5 * std::pow(10, 2 - DESIRED_SIG_FIG_ERROR);
 
 class StatsTester : public ::testing::Test {
 protected:

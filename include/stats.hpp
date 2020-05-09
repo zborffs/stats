@@ -7,6 +7,7 @@
  * 2.) Implement functions using Eigen::MatrixX(i,d,f) and Eigen::VectorX(i,d,f)
  * 3.) Write documentation for each funciton
  * 4.) Test skewness functions.
+ * 5.) Iterative algorithms (updates with every new element or collection of elements)
  */
 
 /// Standard Library Includes
@@ -23,6 +24,7 @@
 
 namespace stats {
     /**
+     * Tested.
      * computes the inverse of the normal cdf function evaluated at a given percent
      * @param p the percent confidence
      * @return the inverse of the normal cdf function evaluated for a given percent
@@ -37,6 +39,7 @@ namespace stats {
     }
 
     /**
+     * Tested.
      * computes the arithmetic mean of an Eigen::VectorXd
      * @param v: an Eigen::VectorXd object
      * @return the arithmetic mean of the data set represented by the Eigen::VectorXd
@@ -45,6 +48,7 @@ namespace stats {
         return v.mean();
     }
 
+    /// Tested.
     namespace internal {
 
         /*
@@ -97,6 +101,7 @@ namespace stats {
     };
 
     /**
+     * Tested.
      * computes the absolute error between two values
      * @tparam T a real number or an integer
      * @param approx_val the approximate / experimental value
@@ -120,6 +125,14 @@ namespace stats {
         }
     }
 
+    /**
+     * Tested.
+     * computes the absolute error between two ints
+     * @tparam T type of int
+     * @param approx_val the approximated val
+     * @param actual_val the actual or theoretical val
+     * @return the absolute error (ie. difference) between the two vals
+     */
     template <class T>
     constexpr auto abs_err(const T approx_val, const T actual_val) noexcept ->
     std::enable_if_t< (std::is_integral<T>::value || std::is_floating_point<T>::value) &&
@@ -127,6 +140,14 @@ namespace stats {
         return internal::abs(approx_val - actual_val);
     }
 
+    /**
+     * Tested.
+     * computes the relative error between two values
+     * @tparam T the type (integer or float)
+     * @param approx_val the approximate value
+     * @param actual_val the actual or theoretical val
+     * @return the relative error between the two values
+     */
     template <class T, class = typename std::enable_if<std::is_integral<T>::value || std::is_floating_point<T>::value>::type>
     constexpr auto rel_err(const T approx_val, const T actual_val) {
         assert((actual_val != 0));
@@ -137,11 +158,27 @@ namespace stats {
         return (abs_err(approx_val, actual_val) / internal::abs((double)actual_val));
     }
 
+    /**
+     * Tested.
+     * computes the percent error between two values
+     * @tparam T the type (integer or float)
+     * @param approx_val the approximate value
+     * @param actual_val the actaul or theoretical value
+     * @return the relative error between the two values
+     */
     template <class T, class = typename std::enable_if<std::is_integral<T>::value || std::is_floating_point<T>::value>::type>
     constexpr auto perc_err(const T approx_val, const T actual_val) {
         return rel_err(approx_val, actual_val) * 100.0;
     }
 
+    /**
+     * Tested.
+     * finds the max value in the dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the max value in the dataset
+     */
     template <class Iterator>
     constexpr auto max(Iterator first, Iterator last) {
         assert(first != last);
@@ -151,10 +188,24 @@ namespace stats {
         return *std::max_element(first, last);
     }
 
+    /**
+     * Tested.
+     * finds the max value in the Eigen::VectorXd
+     * @param vec the Eigen::VectorXd
+     * @return the max value
+     */
     double max(const Eigen::VectorXd& vec) {
         return vec.maxCoeff();
     }
 
+    /**
+     * Tested.
+     * finds the min value in a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the min element in the dataset
+     */
     template <class Iterator>
     constexpr auto min(Iterator first, Iterator last) {
         assert(first != last);
@@ -164,30 +215,53 @@ namespace stats {
         return *std::min_element(first, last);
     }
 
+    /**
+     * Tested.
+     * finds the min value in the Eigen::VectorXd
+     * @param vec the Eigen::VectorXd
+     * @return the min value
+     */
     double min(const Eigen::VectorXd& vec) {
         return vec.minCoeff();
     }
 
+    /**
+     * Tests Failing.
+     * finds the median value in a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last poitner to the last element in the container
+     * @return the median
+     */
     template <class Iterator>
     constexpr auto median(Iterator first, Iterator last) {
         assert(first != last);
-        if(first == last) {
-            throw std::logic_error("Attempting to find median of empty set.:");
+        if (first == last) {
+            throw std::logic_error("Attempting to find median of empty set.");
         }
 
         auto size = std::distance(first, last);
 
-        if(size % 2) {
+        if (size % 2) {
+            /// if there are an odd number of elements, return the middle element
             auto middle = first + size / 2;
             std::nth_element(first, middle, last);
             return *(middle);
         } else {
+            /// if there are an even number of elements, return the average of the middle two
             auto middle_plus_one = first + size / 2;
             std::nth_element(first, first + size / 2 + 1, last);
             return (*(middle_plus_one) + *(middle_plus_one - 1)) / 2;
         }
     }
 
+    /// Rewrite function to not call stl
+    /**
+     * Tests failing.
+     * finds the median value of a Eigen::VectorXd
+     * @param vec the Eigen::VectorXd
+     * @return the median
+     */
     double median(Eigen::VectorXd& vec) {
         return stats::median(vec.data(), vec.data() + vec.size());
 //        auto first = vec.data();
@@ -205,6 +279,15 @@ namespace stats {
 //        }
     }
 
+    /// probably a better implementation of this
+    /**
+     * Tested.
+     * finds the mode of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the mode
+     */
     template <class Iterator>
     constexpr auto mode(Iterator first, Iterator last) {
         assert(first != last);
@@ -240,6 +323,14 @@ namespace stats {
         return maxima;
     }
 
+    /**
+     * Tested.
+     * finds the mean of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the mean
+     */
     template <class Iterator>
     constexpr auto mean(Iterator first, Iterator last) {
         assert(first != last);
@@ -250,6 +341,14 @@ namespace stats {
         return acc / (decltype(acc))std::distance(first, last);
     }
 
+    /**
+     * Tested.
+     * finds the range of a dataset (max - min)
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the range
+     */
     template <class Iterator>
     constexpr auto range(Iterator first, Iterator last) {
         assert(first != last);
@@ -259,6 +358,14 @@ namespace stats {
         return stats::max(first, last) - stats::min(first, last);
     }
 
+    /**
+     * Tested.
+     * computes the quartiles of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the quartiles
+     */
     template <class Iterator>
     constexpr auto quartiles(Iterator first, Iterator last) {
         assert(first != last);
@@ -283,6 +390,14 @@ namespace stats {
         return std::make_tuple(q1, med, q3);
     }
 
+    /**
+     * Tested.
+     * computes the interquartile mean of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the interquartile mean
+     */
     template <class Iterator>
     constexpr auto interquartile_mean(Iterator first, Iterator last) {
         assert(first != last);
@@ -312,6 +427,14 @@ namespace stats {
         return acc / (2 * quartile_size);
     }
 
+    /**
+     * Tested.
+     * computes the interquartile range of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the interquartile range
+     */
     template <class Iterator>
     constexpr auto interquartile_range(Iterator first, Iterator last) {
         assert(first != last);
@@ -322,6 +445,14 @@ namespace stats {
         return q3 - q1;
     }
 
+    /**
+     * Tested.
+     * computes the outliers of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the outliers
+     */
     template <class Iterator>
     constexpr auto outliers(Iterator first, Iterator last) {
         assert(first != last);
@@ -342,6 +473,14 @@ namespace stats {
         return ret;
     }
 
+    /**
+     * Tested.
+     * computes the median absolute deviation of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the median absolute deviation
+     */
     template <class Iterator>
     constexpr auto median_abs_dev(Iterator first, Iterator last) {
         assert(first != last);
@@ -361,6 +500,14 @@ namespace stats {
         return median(new_vec.begin(), new_vec.end());
     }
 
+    /**
+     * Tested.
+     * computes the variance of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the variance
+     */
     template <class Iterator>
     constexpr auto var(Iterator first, Iterator last) {
         assert(first != last);
@@ -380,6 +527,12 @@ namespace stats {
         return acc / (N - 1);
     }
 
+    /**
+     * Tested.
+     * finds the variance of a Eigen::VectorXd
+     * @param vec the Eigen::VectorXd
+     * @return the variance
+     */
     double var(const Eigen::VectorXd& v) {
         double mean = stats::mean(v);
         int N = v.size();
@@ -393,6 +546,12 @@ namespace stats {
         return acc / (N - 1);
     }
 
+    /**
+     * Not Tested.
+     * finds the variance of a Eigen::MatrixXd
+     * @param vec the Eigen::MatrixXd
+     * @return the variance
+     */
     auto var(const Eigen::MatrixXd& m) {
         Eigen::VectorXd mu(m.rows());
         for (int i = 0; i < m.rows(); i++) {
@@ -401,6 +560,14 @@ namespace stats {
         return mu;
     }
 
+    /**
+     * Tested.
+     * computes the standard deviation of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the standard deviation
+     */
     template <class Iterator>
     constexpr auto std_dev(Iterator first, Iterator last) {
         assert(first != last);
@@ -410,14 +577,34 @@ namespace stats {
         return std::sqrt(var(first, last));
     }
 
+    /**
+     * Not Tested.
+     * finds the standard deviation of a Eigen::VectorXd
+     * @param vec the Eigen::VectorXd
+     * @return the standard deviation
+     */
     double std_dev(const Eigen::VectorXd& v) {
         return std::sqrt(var(v));
     }
 
+    /**
+     * Not Tested.
+     * finds the standard deviation of a Eigen::MatrixXd
+     * @param vec the Eigen::MatrixXd
+     * @return the standard deviation
+     */
     Eigen::VectorXd std_dev(const Eigen::MatrixXd& m) {
         return static_cast<Eigen::VectorXd>(var(m).array().sqrt());
     }
 
+    /**
+     * Tested.
+     * computes the quartile deviation of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the quartile deviation
+     */
     template <class Iterator>
     constexpr auto quartile_dev(Iterator first, Iterator last) {
         assert(first != last);
@@ -427,6 +614,14 @@ namespace stats {
         return interquartile_range(first, last) / 2.0;
     }
 
+    /**
+     * Not Tested!
+     * computes the mode skewness of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the mode skewness
+     */
     template <class Iterator>
     constexpr auto mode_skewness(Iterator first, Iterator last) {
         assert(first != last);
@@ -443,6 +638,14 @@ namespace stats {
         return (me - mo[0].first) / s;
     }
 
+    /**
+     * Not Tested!
+     * computes the median skewness of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the median skewness
+     */
     template <class Iterator>
     constexpr auto median_skewness(Iterator first, Iterator last) {
         assert(first != last);
@@ -456,6 +659,14 @@ namespace stats {
         return 3.0 * (me - med) / s;
     }
 
+    /**
+     * Not Tested!
+     * computes the quartile skewness of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the quartile skewness
+     */
     template <class Iterator>
     constexpr auto quartile_skewness(Iterator first, Iterator last) {
         assert(first != last);
@@ -466,6 +677,14 @@ namespace stats {
         return (q3 + q1 - 2.0 * q2) / (q3 - q1);
     }
 
+    /**
+     * Tests failing.
+     * computes the ex kurtosis of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the ex kurtosis
+     */
     template <class Iterator>
     constexpr auto ex_kurtosis(Iterator first, Iterator last) {
         assert(first != last);
@@ -487,6 +706,14 @@ namespace stats {
         return v + 1.0 - 3.0;
     }
 
+    /**
+     * Not Tested.
+     * computes the Pearson correlation coefficient of a dataset
+     * @tparam Iterator the type of elements in the dataset
+     * @param first pointer to the first element in the container
+     * @param last pointer to the last element in the container
+     * @return the Pearson correlation coefficient
+     */
     template <class Iterator>
     constexpr auto pears_corr_coeff(Iterator first1, Iterator last1, Iterator first2, Iterator last2) {
         using ret_type = typename std::iterator_traits<Iterator>::value_type;
@@ -516,6 +743,7 @@ namespace stats {
     }
 
     /**
+     * Tested.
      * computes the pooled relative repeatability of a vector of vectors
      * @tparam Iterator an iterator of the vector of vectors
      * @param first the first iterator in the vector of vectors
@@ -554,6 +782,7 @@ namespace stats {
     }
 
     /**
+     * Not Tested.
      * computes the t-statistic between two data sets
      * @tparam Iterator an iterator of the collection storing the data sets
      * @param x_first an iterator to the beginning of the first data set
@@ -580,7 +809,6 @@ namespace stats {
         auto mean_combined = (size1 / (size1 + size2)) * mean1  + (size2 / (size1 + size2)) * * size1;
         auto t = (mean1 - mean2) / gcem::sqrt(var1 / size1 + var2 / size2);
     }
-
 };
 
 
