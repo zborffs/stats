@@ -417,6 +417,16 @@ TEST_F(StatsTester, InterquartileMean) {
     EXPECT_NEAR(stats::interquartile_mean(wiki_not_div_4_example.begin(), wiki_not_div_4_example.end()), 9, ERROR);
 }
 
+TEST_F(StatsTester, HarmonicMean) {
+#ifdef NDEBUG
+    /// If NBEBUG (not debug) is defined, implying that we are NOT debugging right now, then test that erroneous inputs throw exceptions
+    std::vector<double> v1({}); // Given an empty vector, the function should throw std::logic_error
+#endif // NDEBUG
+
+    std::vector<double> v1({1.0, 2.0, 3.0, 4.0, 5.0}); double v1_hmean = (1. + 1. / 2 + 1. / 3 + 1. / 4 + 1. / 5) / 5.;
+
+    EXPECT_NEAR(stats::hmean(v1.begin(), v1.end()), v1_hmean, ERROR);
+}
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

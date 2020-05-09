@@ -8,6 +8,8 @@
  * 3.) Write documentation for each funciton
  * 4.) Test skewness functions.
  * 5.) Iterative algorithms (updates with every new element or collection of elements)
+ * 6.) Write Kendall rank correlation coefficient algorithm
+ * 7.) Write Spearmans' rank correlation coefficient algorithm
  */
 
 /// Standard Library Includes
@@ -808,6 +810,23 @@ namespace stats {
         /// Apply the t-statistic formula (https://en.wikipedia.org/wiki/T-statistic)
         auto mean_combined = (size1 / (size1 + size2)) * mean1  + (size2 / (size1 + size2)) * * size1;
         auto t = (mean1 - mean2) / gcem::sqrt(var1 / size1 + var2 / size2);
+    }
+
+    /**
+     * Tested.
+     * computes the harmonic mean of a dataset
+     * @tparam Iterator an iterator of the collection storing the data sets
+     * @param first pointer to the first element in the container
+     * @param last the last iterator in the vector of vectors
+     * @return harmonic mean
+     */
+    template <class Iterator>
+    constexpr auto hmean(Iterator first, Iterator last) {
+        using Type = typename std::iterator_traits<Iterator>::value_type;
+        auto ret = std::accumulate(first, last, 0.0, [](Type acc, Type x) {
+            return acc += 1 / x;
+        });
+        return ret / std::distance(first, last);
     }
 };
 
