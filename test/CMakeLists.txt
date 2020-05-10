@@ -21,5 +21,5 @@ target_link_libraries(BootstrapTest Threads::Threads ${GTEST_LIBRARIES})
 target_link_libraries(RankingTest Threads::Threads ${GTEST_LIBRARIES})
 
 add_test(StatsTest StatsTest)
-add_test(BootstrapTest BootstrapTest)
-add_test(RankingTest RankingTest)
+#add_test(BootstrapTest BootstrapTest)
+#add_test(RankingTest RankingTest)
