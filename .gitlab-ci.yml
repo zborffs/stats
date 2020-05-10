@@ -1,0 +1,16 @@
+image: gcc
+
+before_script:
+  - apt-get update &&
+    apt-get upgrade -y &&
+    apt-get install -y cmake &&
+    apt-get update -y &&
+    cmake --version
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - mkdir build && cd build
