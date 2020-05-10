@@ -1,15 +1,10 @@
 image: gcc
 
 before_script:
-  - apt-get update && \
-    apt-get install apt-transport-https ca-certificates gnupg software-properties-common wget && \
-    apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' && \
-    apt-get update && \
-    apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic-rc main' && \
-    apt-get update && \
-    apt-get install kitware-archive-keyring && \
-    rm /etc/apt/trusted.gpg.d/kitware.gpg && \
-    apt-get install cmake && \
+  - apt-get update &&
+    apt-get upgrade -y &&
+    apt-get install cmake &&
+    apt-get update &&
     cmake --version
 
 stages:
