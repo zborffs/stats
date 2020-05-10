@@ -654,31 +654,34 @@ namespace stats {
     }
 
     /**
-     * Not Tested!
-     * computes the mode skewness of a dataset
+     * Tested.
+     * computes the adjusted Fisher-Person coefficient of skewness
      * @tparam Iterator the type of elements in the dataset
      * @param first pointer to the first element in the container
      * @param last pointer to the last element in the container
      * @return the mode skewness
      */
     template <class Iterator>
-    constexpr auto mode_skewness(Iterator first, Iterator last) {
+    constexpr auto skewness(Iterator first, Iterator last) {
         assert(first != last);
-        if(first == last) {
-            throw std::logic_error("Attempting to find mode skewness of empty set.");
+        if (first == last) {
+            throw std::logic_error("Attempting to find skewness of empty set!");
         }
-        auto mo = mode(first, last);
-        if(mo.size() != 1) {
-            throw std::logic_error("The population sample isn't unimodal.");
-        }
-        auto me = mean(first, last);
-        auto s = std_dev(first, last);
 
-        return (me - mo[0].first) / s;
+        auto mean = stats::mean(first, last);
+        auto std_dev = stats::std_dev(first, last, mean);
+        auto size = std::distance(first, last);
+        using Type = typename std::iterator_traits<Iterator>::value_type;
+
+        auto g1 = std::accumulate(first, last, 0.0, [=](Type acc, Type val) {
+            return acc + std::pow(val - mean, 3);
+        }) / size;
+
+        return g1 / std::pow(std_dev, 3);
     }
 
     /**
-     * Tests failing.
+     * Tested.
      * computes the ex kurtosis of a dataset
      * @tparam Iterator the type of elements in the dataset
      * @param first pointer to the first element in the container
@@ -692,13 +695,12 @@ namespace stats {
             throw std::logic_error("Attempting to find ex kurtosis of empty set.");
         }
         auto mu = mean(first, last);
-        auto s = std_dev(first, last);
+        auto s = std_dev(first, last, mu);
+        auto size = std::distance(first, last);
+        using Type = typename std::iterator_traits<Iterator>::value_type;
 
-        std::vector<decltype(mu)> new_vec;
-        new_vec.reserve(std::distance(first, last));
-
-        std::transform(first, last, std::back_inserter(new_vec), [=](decltype(mu) x) {
-            return std::pow((x - mu) / s, 2.0);
+        auto g1 = std::accumulate(first, last, 0.0, [=](Type acc, Type x) {
+            return acc + std::pow(x - mu, 4);
         });
 
         return g1 / (size * std::pow(s, 4)) - 3.0;

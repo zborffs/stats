@@ -334,7 +334,7 @@ TEST_F(StatsTester, Variation) {
     ASSERT_THROW(stats::var(vector_empty.begin(), vector_empty.end()), std::logic_error);
     ASSERT_THROW(stats::var(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
-
+    const double ERR = 0.001;
     for (int size : sizes) {
         double gsl_data[size];
         std::vector<double> stl_data(size);
@@ -350,8 +350,8 @@ TEST_F(StatsTester, Variation) {
         double gsl_ans = gsl_stats_variance(gsl_data, 1, size);
         double stl_ans = stats::var(stl_data.begin(), stl_data.end());
         double eigen_ans = stats::var(eigen_data);
-        EXPECT_NEAR(stl_ans, gsl_ans, ERROR);
-        EXPECT_NEAR(eigen_ans, gsl_ans, ERROR);
+        EXPECT_NEAR(stl_ans, gsl_ans, ERR);
+        EXPECT_NEAR(eigen_ans, gsl_ans, ERR);
     }
 }
 
@@ -367,16 +367,46 @@ TEST_F(StatsTester, QuartileDeviation) {
     EXPECT_NEAR(stats::quartile_dev(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), 2.0, ERROR);
 }
 
+TEST_F(StatsTester, Skewness) {
+#ifdef NDEBUG
+    ASSERT_THROW(stats::skewness(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(stats::skewness(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+#endif // NDEBUG
+    const double ERR = 0.001;
+    for (int size : sizes) {
+        double gsl_data[size];
+        std::vector<double> stl_data(size);
+        for (int j = 0; j < size; j++) {
+            double datum = d(e);
+            gsl_data[j] = datum;
+            stl_data[j] = datum;
+        }
+
+        double gsl_ans = gsl_stats_skew(gsl_data, 1, size);
+        auto stl_ans = stats::skewness(stl_data.begin(), stl_data.end());
+        EXPECT_NEAR(stl_ans, gsl_ans, ERR);
+    }
+}
 
 TEST_F(StatsTester, ExKurtosis) {
 #ifdef NDEBUG
     ASSERT_THROW(stats::ex_kurtosis(vector_empty.begin(), vector_empty.end()), std::logic_error);
     ASSERT_THROW(stats::ex_kurtosis(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
+    const double ERR = 0.001;
+    for (int size : sizes) {
+        double gsl_data[size];
+        std::vector<double> stl_data(size);
+        for (int j = 0; j < size; j++) {
+            double datum = d(e);
+            gsl_data[j] = datum;
+            stl_data[j] = datum;
+        }
 
-    EXPECT_NEAR(stats::ex_kurtosis(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), -1.3, ERROR);
-    std::vector<double> wiki_example({ 0, 3, 4, 1, 2, 3, 0, 2, 1, 3, 2, 0, 2, 2, 3, 2, 5, 2, 3, 999});
-    EXPECT_NEAR(stats::ex_kurtosis(wiki_example.begin(), wiki_example.end()), 15.0514265438, ERROR);
+        double gsl_ans = gsl_stats_kurtosis(gsl_data, 1, size);
+        auto stl_ans = stats::ex_kurtosis(stl_data.begin(), stl_data.end());
+        EXPECT_NEAR(stl_ans, gsl_ans, ERR);
+    }
 }
 
 TEST_F(StatsTester, Repeatability) {
