@@ -530,6 +530,33 @@ namespace stats {
     }
 
     /**
+     * Not Tested.
+     * computes the variance of a dataset given its mean
+     * @tparam Iterator
+     * @param first
+     * @param last
+     * @param mean
+     * @return the variance
+     */
+    template <class Iterator>
+    constexpr auto var(Iterator first, Iterator last, typename std::iterator_traits<Iterator>::value_type mean) {
+        assert(first != last);
+        if(first == last) {
+            throw std::logic_error("Attempting to find variation of empty set.");
+        }
+
+        auto N = std::distance(first, last);
+        double acc = 0.0;
+
+        for (int i = 0; i < N; i++) {
+            auto diff = *(first + i) - mean;
+            acc += diff * diff;
+        }
+
+        return acc / (N - 1);
+    }
+
+    /**
      * Tested.
      * finds the variance of a Eigen::VectorXd
      * @param vec the Eigen::VectorXd
@@ -577,6 +604,15 @@ namespace stats {
             throw std::logic_error("Attempting to find standard deviation of empty set.");
         }
         return std::sqrt(var(first, last));
+    }
+
+    template <class Iterator>
+    constexpr auto std_dev(Iterator first, Iterator last, typename std::iterator_traits<Iterator>::value_type mean) {
+        assert(first != last);
+        if(first == last) {
+            throw std::logic_error("Attempting to find standard deviation of empty set.");
+        }
+        return std::sqrt(stats::var(first, last, mean));
     }
 
     /**
@@ -641,45 +677,6 @@ namespace stats {
     }
 
     /**
-     * Not Tested!
-     * computes the median skewness of a dataset
-     * @tparam Iterator the type of elements in the dataset
-     * @param first pointer to the first element in the container
-     * @param last pointer to the last element in the container
-     * @return the median skewness
-     */
-    template <class Iterator>
-    constexpr auto median_skewness(Iterator first, Iterator last) {
-        assert(first != last);
-        if(first == last) {
-            throw std::logic_error("Attempting to find median skewness of empty set.");
-        }
-        auto me = mean(first, last);
-        auto med = median(first, last);
-        auto s = std_dev(first, last);
-
-        return 3.0 * (me - med) / s;
-    }
-
-    /**
-     * Not Tested!
-     * computes the quartile skewness of a dataset
-     * @tparam Iterator the type of elements in the dataset
-     * @param first pointer to the first element in the container
-     * @param last pointer to the last element in the container
-     * @return the quartile skewness
-     */
-    template <class Iterator>
-    constexpr auto quartile_skewness(Iterator first, Iterator last) {
-        assert(first != last);
-        if(first == last) {
-            throw std::logic_error("Attempting to find quartile skewness of empty set.");
-        }
-        auto [q1, q2, q3] = quartiles(first, last);
-        return (q3 + q1 - 2.0 * q2) / (q3 - q1);
-    }
-
-    /**
      * Tests failing.
      * computes the ex kurtosis of a dataset
      * @tparam Iterator the type of elements in the dataset
@@ -732,8 +729,8 @@ namespace stats {
         // arithemetic mean twice per population.
         auto mu1 = mean(first1, last1);
         auto mu2 = mean(first2, last2);
-        auto s1 = std_dev(first1, last1);
-        auto s2 = std_dev(first2, last2);
+        auto s1 = std_dev(first1, last1, mu1);
+        auto s2 = std_dev(first2, last2, mu2);
 
         auto s = std::transform_reduce(first1, last1, first2, std::plus<ret_type>(), [=](auto i1, auto i2) {
             return (i1 - mu1) * (i2 - mu2);
@@ -798,8 +795,8 @@ namespace stats {
         auto mean2 = stats::mean(y_first, y_last);
 
         /// Compute the variations of the two popuations
-        auto var1 = stats::var(x_first, x_last);
-        auto var2 = stats::var(y_first, y_last);
+        auto var1 = stats::var(x_first, x_last, mean1);
+        auto var2 = stats::var(y_first, y_last, mean2);
 
         /// Compute the sizes of the two populations
         auto size1 = std::distance(x_first, x_last);
