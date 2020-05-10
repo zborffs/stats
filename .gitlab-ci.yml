@@ -7,9 +7,10 @@ stages:
 build:
   stage: build
   script:
+    - apt-get update && apt-get install -y cmake
     - mkdir build && cd build
     - cmake ..
-    - cmake --buid .
+    - cmake --build .
   artifacts:
     expire_in: 10 mins
     paths:
