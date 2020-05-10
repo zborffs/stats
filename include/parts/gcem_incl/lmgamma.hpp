@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -36,7 +36,11 @@ T1
 lmgamma_recur(const T1 a, const T2 p)
 noexcept
 {
-    return( p == T2(1) ? \
+    return( // NaN check
+            is_nan(a) ? \
+                GCLIM<T1>::quiet_NaN() :
+            //
+            p == T2(1) ? \
                 lgamma(a) :
             p <  T2(1) ? \
                 GCLIM<T1>::quiet_NaN() :

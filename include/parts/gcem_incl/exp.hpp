@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -67,16 +67,16 @@ T
 exp_check(const T x)
 noexcept
 {
-    return( x == GCLIM<T>::quiet_NaN() ? \
+    return( is_nan(x) ? \
                 GCLIM<T>::quiet_NaN() :
             //
-            x == - GCLIM<T>::infinity() ? \
+            is_neginf(x) ? \
                 T(0) :
             //
             GCLIM<T>::epsilon() > abs(x) ? \
                 T(1) : 
             //
-            x == GCLIM<T>::infinity() ? \
+            is_posinf(x) ? \
                 GCLIM<T>::infinity() :
             //
             abs(x) < T(2) ? \

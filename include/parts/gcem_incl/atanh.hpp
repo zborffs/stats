@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -43,7 +43,10 @@ T
 atanh_check(const T x)
 noexcept
 {
-    return( // function is defined for |x| < 1
+    return( // NaN check
+            is_nan(x) ? \
+                GCLIM<T>::quiet_NaN() :
+            // function is defined for |x| < 1
             T(1) < abs(x) ? \
                 GCLIM<T>::quiet_NaN() :
             GCLIM<T>::epsilon() > (T(1) - abs(x)) ? \

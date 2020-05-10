@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -163,7 +163,11 @@ T
 incomplete_gamma_check(const T a, const T z)
 noexcept
 {
-    return( a < T(0) ? \
+    return( // NaN check
+            any_nan(a, z) ? \
+                GCLIM<T>::quiet_NaN() :
+            //
+            a < T(0) ? \
                 GCLIM<T>::quiet_NaN() :
             //
             GCLIM<T>::epsilon() > z ? \

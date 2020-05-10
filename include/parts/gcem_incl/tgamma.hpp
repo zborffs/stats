@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -34,13 +34,24 @@ T
 tgamma_check(const T x)
 noexcept
 {
-    return( // indistinguishable from one or zero
+    return( // NaN check
+            is_nan(x) ? \
+                GCLIM<T>::quiet_NaN() :
+            // indistinguishable from one or zero
             GCLIM<T>::epsilon() > abs(x - T(1)) ? \
                 T(1) :
             GCLIM<T>::epsilon() > abs(x) ? \
-                GCLIM<T>::quiet_NaN() :
-             // else
-                exp(lgamma(x)));
+                GCLIM<T>::infinity() :
+            // negative numbers
+            x < T(0) ? \
+                // check for integer
+                GCLIM<T>::epsilon() > abs(x - find_whole(x)) ? \
+                    GCLIM<T>::quiet_NaN() :
+                // else
+                tgamma_check(x+T(1)) / x :
+
+            // else
+                exp(lgamma(x)) );
 }
 
 }

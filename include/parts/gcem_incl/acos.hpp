@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -52,7 +52,11 @@ T
 acos_check(const T x)
 noexcept
 {
-    return( x > T(0) ? \
+    return( // NaN check
+            is_nan(x) ? \
+                GCLIM<T>::quiet_NaN() :
+            //
+            x > T(0) ? \
             // if
                 acos_compute(x) :
             // else 

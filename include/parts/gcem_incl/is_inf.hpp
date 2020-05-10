@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -19,7 +19,7 @@
   ################################################################################*/
 
 /*
- * compile-time check if integer is odd
+ * compile-time check if a float is +/-Inf
  */
 
 #ifndef _gcem_is_inf_HPP

@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -34,9 +34,12 @@ T
 abs(const T x)
 noexcept
 {
-    return( x == T(0) ? T(0) : // deal with signed-zeros
-            //
-            x < T(0) ? - x : x );
+    return( // deal with signed-zeros
+            x == T(0) ? \
+                T(0) :
+            // else
+            x < T(0) ? \
+                - x : x );
 }
 
 #endif

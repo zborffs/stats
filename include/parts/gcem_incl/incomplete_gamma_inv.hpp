@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -214,7 +214,11 @@ T
 incomplete_gamma_inv_check(const T a, const T p)
 noexcept
 {
-    return( GCLIM<T>::epsilon() > p ? \
+    return( // NaN check
+            any_nan(a, p) ? \
+                GCLIM<T>::quiet_NaN() :
+            //
+            GCLIM<T>::epsilon() > p ? \
                 T(0) :
             p > T(1) ? \
                 GCLIM<T>::quiet_NaN() :

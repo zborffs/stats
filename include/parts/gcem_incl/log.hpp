@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -103,7 +103,7 @@ T
 log_check(const T x)
 noexcept
 {
-    return( x == GCLIM<T>::quiet_NaN() ? \
+    return( is_nan(x) ? \
                 GCLIM<T>::quiet_NaN() :
             // x < 0
             x < T(0) ? \

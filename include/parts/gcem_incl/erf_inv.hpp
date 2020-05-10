@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -220,7 +220,20 @@ T
 erf_inv_begin(const T p)
 noexcept
 {
-    return erf_inv_recur_begin(erf_inv_initial_val(p),p);
+    return( // NaN check
+            is_nan(p) ? \
+                GCLIM<T>::quiet_NaN() :
+            // bad values
+            abs(p) > T(1) ? \
+                GCLIM<T>::quiet_NaN() :
+            // indistinguishable from 1
+            GCLIM<T>::epsilon() > abs(T(1) - p) ? \
+                GCLIM<T>::infinity() :
+            // indistinguishable from - 1
+            GCLIM<T>::epsilon() > abs(T(1) + p) ? \
+                - GCLIM<T>::infinity() :
+            // else
+            erf_inv_recur_begin(erf_inv_initial_val(p),p) );
 }
 
 }

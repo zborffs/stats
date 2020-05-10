@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -34,7 +34,10 @@ T
 asinh_compute(const T x)
 noexcept
 {
-    return( // indistinguishable from zero
+    return( // NaN check
+            is_nan(x) ? \
+                GCLIM<T>::quiet_NaN() :
+            // indistinguishable from zero
             GCLIM<T>::epsilon() > abs(x) ? \
                 T(0) :
             // else

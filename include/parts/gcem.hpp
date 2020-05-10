@@ -1,6 +1,6 @@
 /*################################################################################
   ##
-  ##   Copyright (C) 2016-2019 Keith O'Hara
+  ##   Copyright (C) 2016-2020 Keith O'Hara
   ##
   ##   This file is part of the GCE-Math C++ library.
   ##
@@ -18,8 +18,8 @@
   ##
   ################################################################################*/
 
-#ifndef _gcem_misc_HPP
-#define _gcem_misc_HPP
+#ifndef _gcem_HPP
+#define _gcem_HPP
 
 #include "gcem_incl/gcem_options.hpp"
 
@@ -27,12 +27,16 @@ namespace gcem
 {
     #include "gcem_incl/quadrature/gauss_legendre_50.hpp"
 
-    #include "gcem_incl/abs.hpp"
-    #include "gcem_incl/floor.hpp"
-    #include "gcem_incl/is_odd.hpp"
-    #include "gcem_incl/is_even.hpp"
     #include "gcem_incl/is_inf.hpp"
     #include "gcem_incl/is_nan.hpp"
+    #include "gcem_incl/is_finite.hpp"
+
+    #include "gcem_incl/abs.hpp"
+    #include "gcem_incl/ceil.hpp"
+    #include "gcem_incl/floor.hpp"
+    #include "gcem_incl/trunc.hpp"
+    #include "gcem_incl/is_odd.hpp"
+    #include "gcem_incl/is_even.hpp"
     #include "gcem_incl/max.hpp"
     #include "gcem_incl/min.hpp"
     #include "gcem_incl/sqrt.hpp"
@@ -44,12 +48,15 @@ namespace gcem
     #include "gcem_incl/find_fraction.hpp"
     #include "gcem_incl/find_whole.hpp"
     #include "gcem_incl/mantissa.hpp"
+    #include "gcem_incl/round.hpp"
+    #include "gcem_incl/fmod.hpp"
 
     #include "gcem_incl/pow_integral.hpp"
     #include "gcem_incl/exp.hpp"
     #include "gcem_incl/expm1.hpp"
     #include "gcem_incl/log.hpp"
     #include "gcem_incl/log1p.hpp"
+    #include "gcem_incl/log2.hpp"
     #include "gcem_incl/pow.hpp"
 
     #include "gcem_incl/gcd.hpp"
