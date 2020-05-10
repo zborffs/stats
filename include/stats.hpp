@@ -228,7 +228,7 @@ namespace stats {
     }
 
     /**
-     * Tests Failing.
+     * Tested.
      * finds the median value in a dataset
      * @tparam Iterator the type of elements in the dataset
      * @param first pointer to the first element in the container
@@ -252,8 +252,9 @@ namespace stats {
         } else {
             /// if there are an even number of elements, return the average of the middle two
             auto middle_plus_one = first + size / 2;
-            std::nth_element(first, first + size / 2 + 1, last);
-            return (*(middle_plus_one) + *(middle_plus_one - 1)) / 2;
+            std::nth_element(first, middle_plus_one, last);
+            /// Overflows if you add the two values then divide.
+            return *(middle_plus_one) / 2 + *(middle_plus_one - 1) / 2;
         }
     }
 

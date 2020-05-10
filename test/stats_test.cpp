@@ -44,8 +44,8 @@ protected:
 
         unsigned int seed = std::chrono::steady_clock::now().time_since_epoch().count();
         e = std::default_random_engine(seed);
-        std::uniform_real_distribution<double> mean_distro(-(1 << 16), +(1 << 16));
-        std::uniform_real_distribution<double> std_dev_distro(0, +(1 << 12));
+        std::uniform_real_distribution<double> mean_distro(-(1 << 20), +(1 << 20));
+        std::uniform_real_distribution<double> std_dev_distro(0, +(1 << 20));
         d = std::normal_distribution<double>(mean_distro(e), std_dev_distro(e));
     }
 };
