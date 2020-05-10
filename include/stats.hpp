@@ -236,7 +236,7 @@ namespace stats {
      * @return the median
      */
     template <class Iterator>
-    constexpr auto median(Iterator first, Iterator last) {
+    constexpr double median(Iterator first, Iterator last) {
         assert(first != last);
         if (first == last) {
             throw std::logic_error("Attempting to find median of empty set.");
@@ -335,7 +335,7 @@ namespace stats {
      * @return the mean
      */
     template <class Iterator>
-    constexpr auto mean(Iterator first, Iterator last) {
+    constexpr double mean(Iterator first, Iterator last) {
         assert(first != last);
         if(first == last) {
             throw std::logic_error("Attempting to find arithmetic mean of empty set.");
@@ -363,34 +363,32 @@ namespace stats {
 
     /**
      * Tested.
-     * computes the quartiles of a dataset
+     * computes the quartiles of a dataset (assumed to be sorted)
      * @tparam Iterator the type of elements in the dataset
      * @param first pointer to the first element in the container
      * @param last pointer to the last element in the container
      * @return the quartiles
      */
     template <class Iterator>
-    constexpr auto quartiles(Iterator first, Iterator last) {
+    constexpr std::tuple<double, double, double> quartiles(Iterator first, Iterator last) {
         assert(first != last);
         if(first == last) {
             throw std::logic_error("Attempting to find quartiles of empty set.");
         }
-        auto med = median(first, last);
-        auto middle = std::partition(first, last, [med](decltype(med) v) {
-            return v <= med;
-        });
 
-        typename std::iterator_traits<Iterator>::value_type q1;
-        typename std::iterator_traits<Iterator>::value_type q3;
-        if(std::distance(first, last) % 2) {
-            q1 = median(first, middle - 1);
-            q3 = median(middle, last);
-        } else {
-            q1 = median(first, middle);
-            q3 = median(middle, last);
-        }
+        auto n_minus_1 = std::distance(first, last) - 1;
 
-        return std::make_tuple(q1, med, q3);
+        int i1 = std::floor(n_minus_1 * 0.25);
+        int i2 = std::floor(n_minus_1 * 0.50);
+        int i3 = std::floor(n_minus_1 * 0.75);
+        double delta1 = n_minus_1 * 0.25 - i1;
+        double delta2 = n_minus_1 * 0.50 - i2;
+        double delta3 = n_minus_1 * 0.75 - i3;
+        double q1 = (1 - delta1) * *(first + i1) + delta1 * *(first + i1 + 1);
+        double q2 = (1 - delta2) * *(first + i2) + delta2 * *(first + i2 + 1);
+        double q3 = (1 - delta3) * *(first + i3) + delta3 * *(first + i3 + 1);
+
+        return std::make_tuple(q1, q2, q3);
     }
 
     /**
@@ -439,12 +437,13 @@ namespace stats {
      * @return the interquartile range
      */
     template <class Iterator>
-    constexpr auto interquartile_range(Iterator first, Iterator last) {
+    constexpr double interquartile_range(Iterator first, Iterator last) {
         assert(first != last);
         if(first == last) {
             throw std::logic_error("Attempting to find interquartile range of empty set.");
         }
-        auto [q1, q2, q3] = quartiles(first, last);
+
+        auto [q1, q2, q3] = stats::quartiles(first, last);
         return q3 - q1;
     }
 
@@ -464,6 +463,7 @@ namespace stats {
         }
         using itr_type = typename std::iterator_traits<Iterator>::value_type;
 
+        /// can't do auto [...] b/c q1 and q3 are later referenced inside lambda expression
         auto tuple = quartiles(first, last);
         auto q1 = std::get<0>(tuple);
         auto q3 = std::get<2>(tuple);
@@ -645,12 +645,15 @@ namespace stats {
      * @return the quartile deviation
      */
     template <class Iterator>
-    constexpr auto quartile_dev(Iterator first, Iterator last) {
+    constexpr auto quartile_coeff_disp(Iterator first, Iterator last) {
         assert(first != last);
         if(first == last) {
             throw std::logic_error("Attempting to find quartile deviation of empty set");
         }
-        return interquartile_range(first, last) / 2.0;
+
+        auto [q1, q2, q3] = stats::quartiles(first, last);
+
+        return (q3 - q1) / (q3 + q1);
     }
 
     /**

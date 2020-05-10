@@ -253,10 +253,27 @@ TEST_F(StatsTester, Quartiles) {
     ASSERT_THROW(stats::quartiles(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
-    EXPECT_EQ(stats::quartiles(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), std::make_tuple(1.5, 3.0, 4.5));
-    EXPECT_EQ(stats::quartiles(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), std::make_tuple(4, 6, 8));
-    EXPECT_EQ(stats::quartiles(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), std::make_tuple(3, 5.5, 6));
-    EXPECT_EQ(stats::quartiles(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), std::make_tuple(0.0, 0.0, 4.0));
+    for (int size : sizes) {
+        double gsl_data[size];
+        std::vector<double> stl_data(size);
+
+        for (int j = 0; j < size; j++) {
+            double datum = d(e);
+            gsl_data[j] = datum;
+            stl_data[j] = datum;
+        }
+
+        std::sort(&gsl_data[0], &gsl_data[size]);
+        std::sort(stl_data.begin(), stl_data.end());
+
+        double q1 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.25);
+        double q2 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.50);
+        double q3 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.75);
+        auto [q1_1, q2_1, q3_1] = stats::quartiles(stl_data.begin(), stl_data.end());
+        EXPECT_NEAR(q1, q1_1, ERROR);
+        EXPECT_NEAR(q2, q2_1, ERROR);
+        EXPECT_NEAR(q3, q3_1, ERROR);
+    }
 }
 
 TEST_F(StatsTester, InterquartileRange) {
@@ -264,12 +281,25 @@ TEST_F(StatsTester, InterquartileRange) {
     ASSERT_THROW(stats::interquartile_range(vector_empty.begin(), vector_empty.end()), std::logic_error);
     ASSERT_THROW(stats::interquartile_range(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
-    std::vector<int> khan_academy_example({4, 4, 10, 11, 15, 7, 14, 12, 6});
-    EXPECT_NEAR(stats::interquartile_range(khan_academy_example.begin(), khan_academy_example.end()), 8.0, ERROR);
-    EXPECT_NEAR(stats::interquartile_range(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), 3.0, ERROR);
-    EXPECT_NEAR(stats::interquartile_range(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), 4.0, ERROR);
-    EXPECT_NEAR(stats::interquartile_range(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), 3.0, ERROR);
-    EXPECT_NEAR(stats::interquartile_range(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), 4.0, ERROR);
+
+    for (int size : sizes) {
+        double gsl_data[size];
+        std::vector<double> stl_data(size);
+
+        for (int j = 0; j < size; j++) {
+            double datum = d(e);
+            gsl_data[j] = datum;
+            stl_data[j] = datum;
+        }
+
+        std::sort(&gsl_data[0], &gsl_data[size]);
+        std::sort(stl_data.begin(), stl_data.end());
+
+        double q1 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.25);
+        double q3 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.75);
+        double iqr = stats::interquartile_range(stl_data.begin(), stl_data.end());
+        EXPECT_NEAR(q3 - q1, iqr, ERROR);
+    }
 }
 
 TEST_F(StatsTester, Outliers) {
@@ -277,18 +307,11 @@ TEST_F(StatsTester, Outliers) {
     ASSERT_THROW(stats::outliers(vector_empty.begin(), vector_empty.end()), std::logic_error);
     ASSERT_THROW(stats::outliers(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
-
-    EXPECT_EQ(stats::outliers(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), std::unordered_set<double>({}));
-    EXPECT_EQ(stats::outliers(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), std::unordered_set<int>({}));
-    EXPECT_EQ(stats::outliers(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), std::unordered_set<double>({}));
-    EXPECT_EQ(stats::outliers(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), std::unordered_set<float>({}));
-
-
     std::array<long, 7> outlier_array({28, 26, 29, 30, 81, 32, 37});
     std::vector<unsigned int> outlier_vec({16, 14, 3, 12, 15, 17, 22, 15, 52});
 
-    EXPECT_EQ(stats::outliers(outlier_array.begin(), outlier_array.end()), std::unordered_set<long>({81}));
-    EXPECT_EQ(stats::outliers(outlier_vec.begin(), outlier_vec.end()), std::unordered_set<unsigned int>({3, 52}));
+    EXPECT_EQ(stats::outliers(outlier_array.begin(), outlier_array.end()), std::unordered_set<long>{});
+    EXPECT_EQ(stats::outliers(outlier_vec.begin(), outlier_vec.end()), std::unordered_set<unsigned int>({52}));
 }
 
 TEST_F(StatsTester, MedianAbsoluteDeviation) {
@@ -353,18 +376,6 @@ TEST_F(StatsTester, Variation) {
         EXPECT_NEAR(stl_ans, gsl_ans, ERR);
         EXPECT_NEAR(eigen_ans, gsl_ans, ERR);
     }
-}
-
-TEST_F(StatsTester, QuartileDeviation) {
-#ifdef NDEBUG
-    ASSERT_THROW(stats::quartile_dev(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::quartile_dev(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
-#endif // NDEBUG
-
-    EXPECT_NEAR(stats::quartile_dev(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), 1.5, ERROR);
-    EXPECT_NEAR(stats::quartile_dev(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), 2.0, ERROR);
-    EXPECT_NEAR(stats::quartile_dev(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), 1.5, ERROR);
-    EXPECT_NEAR(stats::quartile_dev(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), 2.0, ERROR);
 }
 
 TEST_F(StatsTester, Skewness) {
