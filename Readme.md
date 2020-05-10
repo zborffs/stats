@@ -1,6 +1,6 @@
-stats
+st
 =======
-stats is a header-only statistics and probability library in C++.
+st is a header-only statistics and probability library in C++.
 
 Some of the functions support using Eigen::VectorXd and Eigen::MatrixXd objects. The functions that don't support them, will hopefully support them soon. 
 
@@ -15,7 +15,7 @@ Getting Started
 
 2.    Clone this repository
 ```commandline
-git clone https://gitlab.com/zborffs/stats.git
+git clone https://gitlab.com/zborffs/st.git
 ```
 3.    Copy the contents of the "include" directory of _this_ project into _your_ project
 
@@ -31,11 +31,11 @@ g++ -Iinclude ... main.cpp -o main
 ```
 5.    Include the headers when needed.
 ```c++
-#include "stats/stats.hpp"
+#include "st/st.hpp"
 
 std::vector<double> my_data;
 ...
-auto iqr = stats::interquartile_range(my_data.begin(), my_data.end();
+auto iqr = st::interquartile_range(my_data.begin(), my_data.end();
 ...
 ```
 

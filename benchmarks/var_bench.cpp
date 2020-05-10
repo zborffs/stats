@@ -38,7 +38,7 @@ static void BM_STL_Var(benchmark::State& state) {
     }
 
     for (auto _ : state) {
-        stats::var(data.begin(), data.end());
+        st::var(data.begin(), data.end());
     }
 }
 BENCHMARK(BM_STL_Var)->Range(1024, 262144);
@@ -55,7 +55,7 @@ static void BM_Eigen_Var(benchmark::State& state) {
 
     Eigen::VectorXd data = row_data.transpose();
     for (auto _ : state) {
-        stats::var(data);
+        st::var(data);
     }
 }
 BENCHMARK(BM_Eigen_Var)->Range(1024, 262144);

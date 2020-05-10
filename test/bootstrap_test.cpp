@@ -38,20 +38,20 @@ protected:
 
 TEST_F(BootstrapTester, ComputeBootStrapEst) {
 #ifdef NDEBUG
-//    ASSERT_THROW(stats::compute_bootstrap_conf_int(vector_empty.begin(), vector_empty.end()), std::logic_error);
-//    ASSERT_THROW(stats::compute_bootstrap_conf_int(day1.begin(), day1.begin()), std::logic_error);
+//    ASSERT_THROW(st::compute_bootstrap_conf_int(vector_empty.begin(), vector_empty.end()), std::logic_error);
+//    ASSERT_THROW(st::compute_bootstrap_conf_int(day1.begin(), day1.begin()), std::logic_error);
 #endif // NDEBUG
     using itr = std::vector<int>::iterator;
     using Fn = std::function<double(std::vector<int>::iterator, std::vector<int>::iterator)>;
     std::vector<Fn> funcs;
     funcs.reserve(3);
-    Fn f = stats::mean<itr >;
+    Fn f = st::mean<itr >;
     funcs.push_back(f);
-    f = stats::median<itr>;
+    f = st::median<itr>;
     funcs.push_back(f);
-    f = stats::var<itr>;
+    f = st::var<itr>;
     funcs.push_back(f);
-    stats::Bootstrap<itr, double> bootstrap(coin_flip.begin(), coin_flip.end(), funcs);
+    st::Bootstrap<itr, double> bootstrap(coin_flip.begin(), coin_flip.end(), funcs);
     bootstrap.monte_carlo(1000);
 //    auto ci = bootstrap.confidence_interval();
 //

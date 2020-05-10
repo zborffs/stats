@@ -39,7 +39,7 @@ static void BM_STL_Mean(benchmark::State& state) {
     }
 
     for (auto _ : state) {
-        stats::mean(data.begin(), data.end());
+        st::mean(data.begin(), data.end());
     }
 }
 BENCHMARK(BM_STL_Mean)->Range(1024, 262144);
@@ -56,7 +56,7 @@ static void BM_Eigen_Mean(benchmark::State& state) {
 
     Eigen::VectorXd data = row_data.transpose();
     for (auto _ : state) {
-        stats::mean(data);
+        st::mean(data);
     }
 }
 BENCHMARK(BM_Eigen_Mean)->Range(1024, 262144);

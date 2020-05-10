@@ -38,7 +38,7 @@ static void BM_STL_Min(benchmark::State& state) {
     }
 
     for (auto _ : state) {
-        stats::min(data.begin(), data.end());
+        st::min(data.begin(), data.end());
     }
 }
 BENCHMARK(BM_STL_Min)->Range(1024, 262144);
@@ -55,7 +55,7 @@ static void BM_Eigen_Min(benchmark::State& state) {
 
     Eigen::VectorXd data = row_data.transpose();
     for (auto _ : state) {
-        stats::min(data);
+        st::min(data);
     }
 }
 BENCHMARK(BM_Eigen_Min)->Range(1024, 262144);

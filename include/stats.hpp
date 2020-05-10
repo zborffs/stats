@@ -23,8 +23,9 @@
 /// External Library Includes
 #include <Eigen/Eigen>
 #include <parts/gcem.hpp>
+#include <parts/stats.hpp>
 
-namespace stats {
+namespace st {
     /**
      * Tested.
      * computes the inverse of the normal cdf function evaluated at a given percent
@@ -33,7 +34,7 @@ namespace stats {
      */
     constexpr double inv_normal_cdf(const double p) {
         assert(p >= 0 && p <= 1);
-        if(p < 0 && p > 1) {
+        if (p < 0 || p > 1) {
             throw std::logic_error("p value of inverse normal cdf must be [0, 1].");
         }
         // modified equation from wikipedia. this renders the right answer.
@@ -266,7 +267,7 @@ namespace stats {
      * @return the median
      */
     double median(Eigen::VectorXd& vec) {
-        return stats::median(vec.data(), vec.data() + vec.size());
+        return st::median(vec.data(), vec.data() + vec.size());
 //        auto first = vec.data();
 //        auto last = vec.data() + vec.size();
 //        auto size = std::distance(first, last);
@@ -358,7 +359,7 @@ namespace stats {
         if(first == last) {
             throw std::logic_error("Attempting to find range of empty set.");
         }
-        return stats::max(first, last) - stats::min(first, last);
+        return st::max(first, last) - st::min(first, last);
     }
 
     /**
@@ -443,7 +444,7 @@ namespace stats {
             throw std::logic_error("Attempting to find interquartile range of empty set.");
         }
 
-        auto [q1, q2, q3] = stats::quartiles(first, last);
+        auto [q1, q2, q3] = st::quartiles(first, last);
         return q3 - q1;
     }
 
@@ -564,7 +565,7 @@ namespace stats {
      * @return the variance
      */
     double var(const Eigen::VectorXd& v) {
-        double mean = stats::mean(v);
+        double mean = st::mean(v);
         int N = v.size();
         double acc = 0.0;
 
@@ -613,7 +614,7 @@ namespace stats {
         if(first == last) {
             throw std::logic_error("Attempting to find standard deviation of empty set.");
         }
-        return std::sqrt(stats::var(first, last, mean));
+        return std::sqrt(st::var(first, last, mean));
     }
 
     /**
@@ -651,7 +652,7 @@ namespace stats {
             throw std::logic_error("Attempting to find quartile deviation of empty set");
         }
 
-        auto [q1, q2, q3] = stats::quartiles(first, last);
+        auto [q1, q2, q3] = st::quartiles(first, last);
 
         return (q3 - q1) / (q3 + q1);
     }
@@ -671,8 +672,8 @@ namespace stats {
             throw std::logic_error("Attempting to find skewness of empty set!");
         }
 
-        auto mean = stats::mean(first, last);
-        auto std_dev = stats::std_dev(first, last, mean);
+        auto mean = st::mean(first, last);
+        auto std_dev = st::std_dev(first, last, mean);
         auto size = std::distance(first, last);
         using Type = typename std::iterator_traits<Iterator>::value_type;
 
@@ -777,7 +778,7 @@ namespace stats {
             }
 
             int deg_of_freedom = std::distance(f_i, l_i) - 1;
-            rsd_sum += std::pow(stats::std_dev(f_i, l_i) / stats::mean(f_i, l_i), 2) * (deg_of_freedom);
+            rsd_sum += std::pow(st::std_dev(f_i, l_i) / st::mean(f_i, l_i), 2) * (deg_of_freedom);
             deg_sum += deg_of_freedom;
         }
 
@@ -795,22 +796,54 @@ namespace stats {
      * @return the t-statistic
      */
     template <class Iterator>
-    constexpr auto t_statistic(Iterator x_first, Iterator x_last, Iterator y_first, Iterator y_last) {
+    constexpr double t_statistic(Iterator x_first, Iterator x_last, Iterator y_first, Iterator y_last) {
         /// Compute the means of the two populations
-        auto mean1 = stats::mean(x_first, x_last);
-        auto mean2 = stats::mean(y_first, y_last);
+        auto mean1 = st::mean(x_first, x_last);
+        auto mean2 = st::mean(y_first, y_last);
 
         /// Compute the variations of the two popuations
-        auto var1 = stats::var(x_first, x_last, mean1);
-        auto var2 = stats::var(y_first, y_last, mean2);
+        auto var1 = st::var(x_first, x_last, mean1);
+        auto var2 = st::var(y_first, y_last, mean2);
 
         /// Compute the sizes of the two populations
         auto size1 = std::distance(x_first, x_last);
         auto size2 = std::distance(y_first, y_last);
 
-        /// Apply the t-statistic formula (https://en.wikipedia.org/wiki/T-statistic)
-        auto mean_combined = (size1 / (size1 + size2)) * mean1  + (size2 / (size1 + size2)) * * size1;
-        auto t = (mean1 - mean2) / gcem::sqrt(var1 / size1 + var2 / size2);
+        /// Apply the t-statistic formula (https://www.itl.nist.gov/div898/handbook/eda/section3/eda353.htm)
+        return (mean1 - mean2) / std::sqrt(var1 / size1 + var2 / size2);
+    }
+
+    /**
+     *
+     * @tparam T
+     * @param x_first
+     * @param x_last
+     * @param y_first
+     * @param y_last
+     * @return
+     */
+    template <class Iterator>
+    constexpr bool two_samp_t_test(Iterator x_first, Iterator x_last, Iterator y_first, Iterator y_last, double alpha = 0.05) {
+        /// the null hypothesis: H0 = mu1 = mu2; Ha = mu1 != mu2
+        /// Compute the means of the two populations
+        auto mean1 = st::mean(x_first, x_last);
+        auto mean2 = st::mean(y_first, y_last);
+
+        /// Compute the variations of the two popuations
+        auto var1 = st::var(x_first, x_last, mean1);
+        auto var2 = st::var(y_first, y_last, mean2);
+
+        /// Compute the sizes of the two populations
+        auto size1 = std::distance(x_first, x_last);
+        auto size2 = std::distance(y_first, y_last);
+
+        /// Apply the t-statistic formula (https://www.itl.nist.gov/div898/handbook/eda/section3/eda353.htm)
+        double T = (mean1 - mean2) / std::sqrt(var1 / size1 + var2 / size2);
+
+        double nu = std::pow(var1 / size1 + var2 / size2, 2) / (std::pow(var1 / size1, 2) / (size1 - 1) + std::pow(var2 / size2, 2) / (size2 - 1));
+        double t = stats::dt(1. - alpha / 2., nu);
+
+        return std::abs(T) > t;
     }
 
     /**

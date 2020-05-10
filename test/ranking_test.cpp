@@ -15,15 +15,15 @@ class RankingTester : public ::testing::Test {
 protected:
     std::streambuf* sbuf_;
     std::stringstream buffer_{};
-    stats::Player prometheus_{"Prometheus"};
-    stats::Player magnus_carlsen_{"Magnus Carlsen", 2862};
-    stats::Player stockfish_{"Stockfish", 3500};
-    stats::Player hikaru_nakamura_{"Hikaru Nakamura", 2736};
+    st::Player prometheus_{"Prometheus"};
+    st::Player magnus_carlsen_{"Magnus Carlsen", 2862};
+    st::Player stockfish_{"Stockfish", 3500};
+    st::Player hikaru_nakamura_{"Hikaru Nakamura", 2736};
 
-    stats::Player p1{"Player 1", 1500};
-    stats::Player p2{"Player 2", 1400};
-    stats::Player p3{"Player 3", 1550};
-    stats::Player p4{"Player 4", 1700};
+    st::Player p1{"Player 1", 1500};
+    st::Player p2{"Player 2", 1400};
+    st::Player p3{"Player 3", 1550};
+    st::Player p4{"Player 4", 1700};
 
     RankingTester() : sbuf_{nullptr} {
 
@@ -80,13 +80,13 @@ TEST_F(RankingTester, SPRT) {
 }
 
 TEST_F(RankingTester, UpdateGlickoRating) {
-    std::vector<stats::Player> players{p1, p2, p3, p4};
+    std::vector<st::Player> players{p1, p2, p3, p4};
 
-    stats::Tournament t = stats::Tournament(players, 1);
+    st::Tournament t = st::Tournament(players, 1);
 
-    stats::Match m1(p1, p2, 0, 0, 0, 0, 1);
-    stats::Match m2(p1, p3, 0, 0, 0, 0, -1);
-    stats::Match m3(p1, p4, 0, 0, 0, 0, -1);
+    st::Match m1(p1, p2, 0, 0, 0, 0, 1);
+    st::Match m2(p1, p3, 0, 0, 0, 0, -1);
+    st::Match m3(p1, p4, 0, 0, 0, 0, -1);
     t.add_match(m1); t.add_match(m2); t.add_match(m3);
     t.update_glicko_ratings();
 }
@@ -96,7 +96,7 @@ TEST_F(RankingTester, SimulatedTournament) {
 }
 
 TEST_F(RankingTester, PlayerOutput) {
-    auto f = [=](const stats::Player& p) {
+    auto f = [=](const st::Player& p) {
         return "Player:\n  name: " + p.name + "\n  elo: " + (std::to_string(p.elo_rating))+ "\n  glicko2: " + (std::to_string(p.glicko_rating - 2 * p.glicko_deviation)) + "-" + (std::to_string(p.glicko_rating + 2 * p.glicko_deviation)) + " (0.95, " + std::to_string(p.glicko_volatility) + ")\n";
     };
 
@@ -139,7 +139,7 @@ TEST_F(RankingTester, MatchOutput) {
 TEST_F(RankingTester, KendallTauDistance) {
     std::vector<int> rank1({1, 2, 3, 4, 5}); std::vector<int> rank2({3, 4, 1, 2, 5});
     const double norm_kend_tau_dist = 0.4;
-    EXPECT_NEAR(norm_kend_tau_dist, stats::norm_kendall_tau_dist_sorted(rank1.begin(), rank1.end(), rank2.begin()), ERROR);
+    EXPECT_NEAR(norm_kend_tau_dist, st::norm_kendall_tau_dist_sorted(rank1.begin(), rank1.end(), rank2.begin()), ERROR);
 }
 
 TEST_F(RankingTester, ApproxKendallTauDistance) {

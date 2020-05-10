@@ -59,29 +59,29 @@ TEST_F(StatsTester, Absolute) {
     long l1 = -22, l2 = 45, l3 = 0;
     unsigned int u1 = 33, u2 = 0;
 
-    EXPECT_FLOAT_EQ(stats::internal::abs(d1), 1.0);
-    EXPECT_FLOAT_EQ(stats::internal::abs(d2), 0.123);
-    EXPECT_FLOAT_EQ(stats::internal::abs(d3), 0.0);
-    EXPECT_FLOAT_EQ(stats::internal::abs(d4), 0.0);
+    EXPECT_FLOAT_EQ(st::internal::abs(d1), 1.0);
+    EXPECT_FLOAT_EQ(st::internal::abs(d2), 0.123);
+    EXPECT_FLOAT_EQ(st::internal::abs(d3), 0.0);
+    EXPECT_FLOAT_EQ(st::internal::abs(d4), 0.0);
 
-    EXPECT_EQ(stats::internal::abs(ul1), 1);
-    EXPECT_EQ(stats::internal::abs(ul2), 0);
+    EXPECT_EQ(st::internal::abs(ul1), 1);
+    EXPECT_EQ(st::internal::abs(ul2), 0);
 
-    EXPECT_EQ(stats::internal::abs(i1), 12);
-    EXPECT_EQ(stats::internal::abs(i2), 1);
-    EXPECT_EQ(stats::internal::abs(i3), 0);
-    EXPECT_EQ(stats::internal::abs(ll1), 123);
-    EXPECT_EQ(stats::internal::abs(ll2), ll2);
-    EXPECT_EQ(stats::internal::abs(ll3), 0);
-    EXPECT_FLOAT_EQ(stats::internal::abs(f1), f1);
-    EXPECT_FLOAT_EQ(stats::internal::abs(f2), 0.321);
-    EXPECT_FLOAT_EQ(stats::internal::abs(f3), 0.0);
-    EXPECT_FLOAT_EQ(stats::internal::abs(f4), 0.0);
-    EXPECT_EQ(stats::internal::abs(l1), 22);
-    EXPECT_EQ(stats::internal::abs(l2), 45);
-    EXPECT_EQ(stats::internal::abs(l3), 0);
-    EXPECT_EQ(stats::internal::abs(u1), 33);
-    EXPECT_EQ(stats::internal::abs(u2), 0);
+    EXPECT_EQ(st::internal::abs(i1), 12);
+    EXPECT_EQ(st::internal::abs(i2), 1);
+    EXPECT_EQ(st::internal::abs(i3), 0);
+    EXPECT_EQ(st::internal::abs(ll1), 123);
+    EXPECT_EQ(st::internal::abs(ll2), ll2);
+    EXPECT_EQ(st::internal::abs(ll3), 0);
+    EXPECT_FLOAT_EQ(st::internal::abs(f1), f1);
+    EXPECT_FLOAT_EQ(st::internal::abs(f2), 0.321);
+    EXPECT_FLOAT_EQ(st::internal::abs(f3), 0.0);
+    EXPECT_FLOAT_EQ(st::internal::abs(f4), 0.0);
+    EXPECT_EQ(st::internal::abs(l1), 22);
+    EXPECT_EQ(st::internal::abs(l2), 45);
+    EXPECT_EQ(st::internal::abs(l3), 0);
+    EXPECT_EQ(st::internal::abs(u1), 33);
+    EXPECT_EQ(st::internal::abs(u2), 0);
 }
 
 TEST_F(StatsTester, Error) {
@@ -97,31 +97,31 @@ TEST_F(StatsTester, Error) {
     long long ll_b = -133;
 
     /// Absolute Error
-    EXPECT_NEAR(stats::abs_err(d_m1, d_a), 0.05, ERROR);
-    EXPECT_NEAR(stats::abs_err(d_m2, d_a), 0.05, ERROR);
-    EXPECT_EQ(stats::abs_err(ui_m1, ui_a), 2);
-    EXPECT_EQ(stats::abs_err(ui_m2, ui_a), 0);
-    EXPECT_EQ(stats::abs_err(ll_a, ll_b), 256);
+    EXPECT_NEAR(st::abs_err(d_m1, d_a), 0.05, ERROR);
+    EXPECT_NEAR(st::abs_err(d_m2, d_a), 0.05, ERROR);
+    EXPECT_EQ(st::abs_err(ui_m1, ui_a), 2);
+    EXPECT_EQ(st::abs_err(ui_m2, ui_a), 0);
+    EXPECT_EQ(st::abs_err(ll_a, ll_b), 256);
 
     /// Relative Error
-    EXPECT_NEAR(stats::rel_err(d_m1, d_a), 0.005, ERROR);
-    EXPECT_NEAR(stats::rel_err(d_m2, d_a), 0.005, ERROR);
-    EXPECT_NEAR(stats::rel_err(ui_m1, ui_a), 2.0 / 3.0, ERROR);
-    EXPECT_EQ(stats::rel_err(ui_m2, ui_a), 0.0);
-    EXPECT_NEAR(stats::rel_err(ll_a, ll_b), (256.0 / 133.0), ERROR);
+    EXPECT_NEAR(st::rel_err(d_m1, d_a), 0.005, ERROR);
+    EXPECT_NEAR(st::rel_err(d_m2, d_a), 0.005, ERROR);
+    EXPECT_NEAR(st::rel_err(ui_m1, ui_a), 2.0 / 3.0, ERROR);
+    EXPECT_EQ(st::rel_err(ui_m2, ui_a), 0.0);
+    EXPECT_NEAR(st::rel_err(ll_a, ll_b), (256.0 / 133.0), ERROR);
 
     /// Percent Error
-    EXPECT_NEAR(stats::perc_err(d_m1, d_a), 0.5, ERROR);
-    EXPECT_NEAR(stats::perc_err(d_m2, d_a), 0.5, ERROR);
-    EXPECT_NEAR(stats::perc_err(ui_m1, ui_a), 200.0 / 3.0, ERROR);
-    EXPECT_EQ(stats::perc_err(ui_m2, ui_a), 0.0);
-    EXPECT_NEAR(stats::perc_err(ll_a, ll_b), 256.0 / 1.33, ERROR);
+    EXPECT_NEAR(st::perc_err(d_m1, d_a), 0.5, ERROR);
+    EXPECT_NEAR(st::perc_err(d_m2, d_a), 0.5, ERROR);
+    EXPECT_NEAR(st::perc_err(ui_m1, ui_a), 200.0 / 3.0, ERROR);
+    EXPECT_EQ(st::perc_err(ui_m2, ui_a), 0.0);
+    EXPECT_NEAR(st::perc_err(ll_a, ll_b), 256.0 / 1.33, ERROR);
 }
 
 TEST_F(StatsTester, Maximum) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::max(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::max(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::max(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::max(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
     for (int size : sizes) {
@@ -137,8 +137,8 @@ TEST_F(StatsTester, Maximum) {
         Eigen::VectorXd eigen_data = eigen_row_data.transpose();
 
         double gsl_ans = gsl_stats_max(gsl_data, 1, size);
-        double stl_ans = stats::max(stl_data.begin(), stl_data.end());
-        double eigen_ans = stats::max(eigen_data);
+        double stl_ans = st::max(stl_data.begin(), stl_data.end());
+        double eigen_ans = st::max(eigen_data);
         EXPECT_NEAR(stl_ans, gsl_ans, ERROR);
         EXPECT_NEAR(eigen_ans, gsl_ans, ERROR);
     }
@@ -147,8 +147,8 @@ TEST_F(StatsTester, Maximum) {
 
 TEST_F(StatsTester, Minimum) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::min(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::min(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::min(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::min(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
     for (int size : sizes) {
@@ -164,8 +164,8 @@ TEST_F(StatsTester, Minimum) {
         Eigen::VectorXd eigen_data = eigen_row_data.transpose();
 
         double gsl_ans = gsl_stats_min(gsl_data, 1, size);
-        double stl_ans = stats::min(stl_data.begin(), stl_data.end());
-        double eigen_ans = stats::min(eigen_data);
+        double stl_ans = st::min(stl_data.begin(), stl_data.end());
+        double eigen_ans = st::min(eigen_data);
         EXPECT_NEAR(stl_ans, gsl_ans, ERROR);
         EXPECT_NEAR(eigen_ans, gsl_ans, ERROR);
     }
@@ -173,8 +173,8 @@ TEST_F(StatsTester, Minimum) {
 
 TEST_F(StatsTester, Median) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::median(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::median(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::median(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::median(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
     for (int size : sizes) {
@@ -190,8 +190,8 @@ TEST_F(StatsTester, Median) {
         Eigen::VectorXd eigen_data = eigen_row_data.transpose();
 
         double gsl_ans = gsl_stats_median(gsl_data, 1, size);
-        double stl_ans = stats::median(stl_data.begin(), stl_data.end());
-        double eigen_ans = stats::median(eigen_data);
+        double stl_ans = st::median(stl_data.begin(), stl_data.end());
+        double eigen_ans = st::median(eigen_data);
         EXPECT_NEAR(stl_ans, gsl_ans, ERROR);
         EXPECT_NEAR(eigen_ans, gsl_ans, ERROR);
     }
@@ -199,20 +199,20 @@ TEST_F(StatsTester, Median) {
 
 TEST_F(StatsTester, Mode) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::mode(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::mode(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::mode(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::mode(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
-    EXPECT_EQ(stats::mode(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), std::unordered_set<double>({1.0, 2.0, 3.0, 4.0, 5.0}));
-    EXPECT_EQ(stats::mode(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), std::unordered_set<int>({3, 5, 7, 9}));
-    EXPECT_EQ(stats::mode(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), std::unordered_set<double>({6}));
-    EXPECT_EQ(stats::mode(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), std::unordered_set<float>({0.0}));
+    EXPECT_EQ(st::mode(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), std::unordered_set<double>({1.0, 2.0, 3.0, 4.0, 5.0}));
+    EXPECT_EQ(st::mode(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), std::unordered_set<int>({3, 5, 7, 9}));
+    EXPECT_EQ(st::mode(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), std::unordered_set<double>({6}));
+    EXPECT_EQ(st::mode(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), std::unordered_set<float>({0.0}));
 }
 
 TEST_F(StatsTester, ArithmeticMean) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::mean(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::mean(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::mean(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::mean(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
     for (int size : sizes) {
@@ -228,8 +228,8 @@ TEST_F(StatsTester, ArithmeticMean) {
         Eigen::VectorXd eigen_data = eigen_row_data.transpose();
 
         double gsl_ans = gsl_stats_sd(gsl_data, 1, size);
-        double stl_ans = stats::std_dev(stl_data.begin(), stl_data.end());
-        double eigen_ans = stats::std_dev(eigen_data);
+        double stl_ans = st::std_dev(stl_data.begin(), stl_data.end());
+        double eigen_ans = st::std_dev(eigen_data);
         EXPECT_NEAR(stl_ans, gsl_ans, ERROR);
         EXPECT_NEAR(eigen_ans, gsl_ans, ERROR);
     }
@@ -237,20 +237,20 @@ TEST_F(StatsTester, ArithmeticMean) {
 
 TEST_F(StatsTester, Range) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::range(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::range(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::range(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::range(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
-    EXPECT_NEAR(stats::range(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), 4.0, ERROR);
-    EXPECT_NEAR(stats::range(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), 6.0, ERROR);
-    EXPECT_NEAR(stats::range(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), 5.0, ERROR);
-    EXPECT_NEAR(stats::range(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), 5.0, ERROR);
+    EXPECT_NEAR(st::range(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), 4.0, ERROR);
+    EXPECT_NEAR(st::range(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), 6.0, ERROR);
+    EXPECT_NEAR(st::range(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), 5.0, ERROR);
+    EXPECT_NEAR(st::range(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), 5.0, ERROR);
 }
 
 TEST_F(StatsTester, Quartiles) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::quartiles(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::quartiles(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::quartiles(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::quartiles(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
     for (int size : sizes) {
@@ -269,7 +269,7 @@ TEST_F(StatsTester, Quartiles) {
         double q1 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.25);
         double q2 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.50);
         double q3 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.75);
-        auto [q1_1, q2_1, q3_1] = stats::quartiles(stl_data.begin(), stl_data.end());
+        auto [q1_1, q2_1, q3_1] = st::quartiles(stl_data.begin(), stl_data.end());
         EXPECT_NEAR(q1, q1_1, ERROR);
         EXPECT_NEAR(q2, q2_1, ERROR);
         EXPECT_NEAR(q3, q3_1, ERROR);
@@ -278,8 +278,8 @@ TEST_F(StatsTester, Quartiles) {
 
 TEST_F(StatsTester, InterquartileRange) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::interquartile_range(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::interquartile_range(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::interquartile_range(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::interquartile_range(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
     for (int size : sizes) {
@@ -297,39 +297,40 @@ TEST_F(StatsTester, InterquartileRange) {
 
         double q1 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.25);
         double q3 = gsl_stats_quantile_from_sorted_data(gsl_data, 1, size, 0.75);
-        double iqr = stats::interquartile_range(stl_data.begin(), stl_data.end());
+        double iqr = st::interquartile_range(stl_data.begin(), stl_data.end());
         EXPECT_NEAR(q3 - q1, iqr, ERROR);
     }
 }
 
 TEST_F(StatsTester, Outliers) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::outliers(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::outliers(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::outliers(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::outliers(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
     std::array<long, 7> outlier_array({28, 26, 29, 30, 81, 32, 37});
     std::vector<unsigned int> outlier_vec({16, 14, 3, 12, 15, 17, 22, 15, 52});
 
-    EXPECT_EQ(stats::outliers(outlier_array.begin(), outlier_array.end()), std::unordered_set<long>{});
-    EXPECT_EQ(stats::outliers(outlier_vec.begin(), outlier_vec.end()), std::unordered_set<unsigned int>({52}));
+    EXPECT_EQ(st::outliers(outlier_array.begin(), outlier_array.end()), std::unordered_set<long>{});
+    EXPECT_EQ(st::outliers(outlier_vec.begin(), outlier_vec.end()), std::unordered_set<unsigned int>({52}));
 }
 
 TEST_F(StatsTester, MedianAbsoluteDeviation) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::median_abs_dev(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::median_abs_dev(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::median_abs_dev(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::median_abs_dev(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
-    EXPECT_NEAR(stats::median_abs_dev(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), 1.0, ERROR);
-    EXPECT_NEAR(stats::median_abs_dev(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), 2.0, ERROR);
-    EXPECT_NEAR(stats::median_abs_dev(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), 0.5, ERROR);
-    EXPECT_NEAR(stats::median_abs_dev(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), 0.0, ERROR);
+    EXPECT_NEAR(st::median_abs_dev(vector_double_odd_sorted.begin(), vector_double_odd_sorted.end()), 1.0, ERROR);
+    EXPECT_NEAR(st::median_abs_dev(vector_int_even_sorted.begin(), vector_int_even_sorted.end()), 2.0, ERROR);
+    EXPECT_NEAR(st::median_abs_dev(vector_double_odd_repeat_unsorted.begin(), vector_double_odd_repeat_unsorted.end()), 0.5, ERROR);
+    EXPECT_NEAR(st::median_abs_dev(vector_float_odd_repeat_sorted.begin(), vector_float_odd_repeat_sorted.end()), 0.0, ERROR);
 }
 
+/// add (..., mean) test
 TEST_F(StatsTester, StandardDeviation) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::std_dev(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::std_dev(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::std_dev(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::std_dev(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
     for (int size : sizes) {
@@ -345,17 +346,18 @@ TEST_F(StatsTester, StandardDeviation) {
         Eigen::VectorXd eigen_data = eigen_row_data.transpose();
 
         double gsl_ans = gsl_stats_sd(gsl_data, 1, size);
-        double stl_ans = stats::std_dev(stl_data.begin(), stl_data.end());
-        double eigen_ans = stats::std_dev(eigen_data);
+        double stl_ans = st::std_dev(stl_data.begin(), stl_data.end());
+        double eigen_ans = st::std_dev(eigen_data);
         EXPECT_NEAR(stl_ans, gsl_ans, ERROR);
         EXPECT_NEAR(eigen_ans, gsl_ans, ERROR);
     }
 }
 
+/// add (..., mean) test
 TEST_F(StatsTester, Variation) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::var(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::var(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::var(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::var(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
     const double ERR = 0.001;
     for (int size : sizes) {
@@ -371,8 +373,8 @@ TEST_F(StatsTester, Variation) {
         Eigen::VectorXd eigen_data = eigen_row_data.transpose();
 
         double gsl_ans = gsl_stats_variance(gsl_data, 1, size);
-        double stl_ans = stats::var(stl_data.begin(), stl_data.end());
-        double eigen_ans = stats::var(eigen_data);
+        double stl_ans = st::var(stl_data.begin(), stl_data.end());
+        double eigen_ans = st::var(eigen_data);
         EXPECT_NEAR(stl_ans, gsl_ans, ERR);
         EXPECT_NEAR(eigen_ans, gsl_ans, ERR);
     }
@@ -380,8 +382,8 @@ TEST_F(StatsTester, Variation) {
 
 TEST_F(StatsTester, Skewness) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::skewness(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::skewness(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::skewness(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::skewness(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
     const double ERR = 0.001;
     for (int size : sizes) {
@@ -394,15 +396,15 @@ TEST_F(StatsTester, Skewness) {
         }
 
         double gsl_ans = gsl_stats_skew(gsl_data, 1, size);
-        auto stl_ans = stats::skewness(stl_data.begin(), stl_data.end());
+        auto stl_ans = st::skewness(stl_data.begin(), stl_data.end());
         EXPECT_NEAR(stl_ans, gsl_ans, ERR);
     }
 }
 
 TEST_F(StatsTester, ExKurtosis) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::ex_kurtosis(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::ex_kurtosis(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::ex_kurtosis(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::ex_kurtosis(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
     const double ERR = 0.001;
     for (int size : sizes) {
@@ -415,15 +417,15 @@ TEST_F(StatsTester, ExKurtosis) {
         }
 
         double gsl_ans = gsl_stats_kurtosis(gsl_data, 1, size);
-        auto stl_ans = stats::ex_kurtosis(stl_data.begin(), stl_data.end());
+        auto stl_ans = st::ex_kurtosis(stl_data.begin(), stl_data.end());
         EXPECT_NEAR(stl_ans, gsl_ans, ERR);
     }
 }
 
 TEST_F(StatsTester, Repeatability) {
 #ifdef NDEBUG
-    ASSERT_THROW(stats::ex_kurtosis(vector_empty.begin(), vector_empty.end()), std::logic_error);
-    ASSERT_THROW(stats::ex_kurtosis(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+    ASSERT_THROW(st::ex_kurtosis(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::ex_kurtosis(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
 #endif // NDEBUG
 
     /// Example data taken from https://www.youtube.com/watch?v=ckcU4iPvhlg
@@ -434,7 +436,7 @@ TEST_F(StatsTester, Repeatability) {
     std::vector<double> day5({9.07, 10.04, 9.69, 10.94});
     std::vector<std::vector<double>> data({day1, day2, day3, day4, day5});
 
-    EXPECT_NEAR(stats::repeatability(data.begin(), data.end()), 0.04, 0.01);
+    EXPECT_NEAR(st::repeatability(data.begin(), data.end()), 0.04, 0.01);
 }
 
 TEST_F(StatsTester, InverseNormalCDF) {
@@ -444,29 +446,41 @@ TEST_F(StatsTester, InverseNormalCDF) {
     double p4 = 0.98;
     double p5 = 0.99;
 
-    EXPECT_NEAR(stats::inv_normal_cdf(p1), 1.281551565545, ERROR);
-    EXPECT_NEAR(stats::inv_normal_cdf(p2), 1.644853626951, ERROR);
-    EXPECT_NEAR(stats::inv_normal_cdf(p3), 1.959963984540, ERROR);
-    EXPECT_NEAR(stats::inv_normal_cdf(p4), 2.326347874041, ERROR);
-    EXPECT_NEAR(stats::inv_normal_cdf(p5), 2.575829303549, ERROR);
+    EXPECT_NEAR(st::inv_normal_cdf(p1), 1.281551565545, ERROR);
+    EXPECT_NEAR(st::inv_normal_cdf(p2), 1.644853626951, ERROR);
+    EXPECT_NEAR(st::inv_normal_cdf(p3), 1.959963984540, ERROR);
+    EXPECT_NEAR(st::inv_normal_cdf(p4), 2.326347874041, ERROR);
+    EXPECT_NEAR(st::inv_normal_cdf(p5), 2.575829303549, ERROR);
 }
 
 TEST_F(StatsTester, InterquartileMean) {
     std::vector<double> wiki_div_4_example({1, 3, 4, 5, 6, 6, 7, 7, 8, 8, 9, 38});
-    EXPECT_NEAR(stats::interquartile_mean(wiki_div_4_example.begin(), wiki_div_4_example.end()), 6.5, ERROR);
+    EXPECT_NEAR(st::interquartile_mean(wiki_div_4_example.begin(), wiki_div_4_example.end()), 6.5, ERROR);
     std::vector<double> wiki_not_div_4_example({1, 3, 5, 7, 9, 11, 13, 15, 17});
-    EXPECT_NEAR(stats::interquartile_mean(wiki_not_div_4_example.begin(), wiki_not_div_4_example.end()), 9, ERROR);
+    EXPECT_NEAR(st::interquartile_mean(wiki_not_div_4_example.begin(), wiki_not_div_4_example.end()), 9, ERROR);
 }
 
 TEST_F(StatsTester, HarmonicMean) {
 #ifdef NDEBUG
     /// If NBEBUG (not debug) is defined, implying that we are NOT debugging right now, then test that erroneous inputs throw exceptions
-    std::vector<double> v1({}); // Given an empty vector, the function should throw std::logic_error
+    ASSERT_THROW(st::ex_kurtosis(vector_empty.begin(), vector_empty.end()), std::logic_error);
 #endif // NDEBUG
 
     std::vector<double> v1({1.0, 2.0, 3.0, 4.0, 5.0}); double v1_hmean = (1. + 1. / 2 + 1. / 3 + 1. / 4 + 1. / 5) / 5.;
 
-    EXPECT_NEAR(stats::hmean(v1.begin(), v1.end()), v1_hmean, ERROR);
+    EXPECT_NEAR(st::hmean(v1.begin(), v1.end()), v1_hmean, ERROR);
+}
+
+TEST_F(StatsTester, TStatstic) {
+
+}
+
+TEST_F(StatsTester, TwoSampleTTest) {
+
+}
+
+TEST_F(StatsTester, PearsonCorrelationCoeff) {
+
 }
 
 int main(int argc, char **argv) {

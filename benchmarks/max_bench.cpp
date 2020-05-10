@@ -38,7 +38,7 @@ static void BM_STL_Max(benchmark::State& state) {
     }
 
     for (auto _ : state) {
-        stats::max(data.begin(), data.end());
+        st::max(data.begin(), data.end());
     }
 }
 BENCHMARK(BM_STL_Max)->Range(1024, 262144);
@@ -55,7 +55,7 @@ static void BM_Eigen_Max(benchmark::State& state) {
 
     Eigen::VectorXd data = row_data.transpose();
     for (auto _ : state) {
-        stats::max(data);
+        st::max(data);
     }
 }
 BENCHMARK(BM_Eigen_Max)->Range(1024, 262144);

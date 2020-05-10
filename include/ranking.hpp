@@ -36,7 +36,7 @@
 /// Internal Library Includes
 #include "stats.hpp"
 
-namespace stats {
+namespace st {
     struct Player {
         std::string name;
         int elo_rating;
@@ -136,7 +136,7 @@ namespace stats {
             return false;
         }
 
-        void add_match(const stats::Match& match) {
+        void add_match(const st::Match& match) {
             int i = 0;
             int j = 0;
 

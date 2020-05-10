@@ -33,7 +33,7 @@
 /// Internal Library Includes
 #include "stats.hpp"
 
-namespace stats {
+namespace st {
 
     /// One could easily abuse this class if they don't perform operations in the right order.
     template <class Itr, class RetType>
@@ -146,7 +146,7 @@ namespace stats {
          */
         void compute_conf_interval(std::vector<std::vector<ValueType> >& est_resample, const double confidence) {
             // This method implicitly assume normal distributions.
-            double inv_cdf = stats::inv_normal_cdf(confidence);
+            double inv_cdf = st::inv_normal_cdf(confidence);
             for (int i = 0; i < res_.size(); i++) {
                 auto s = std_dev(est_resample[i].begin(), est_resample[i].end());
                 auto lower_bound = res_[i] - inv_cdf * s;
@@ -258,7 +258,7 @@ namespace stats {
          */
         void compute_conf_interval(Eigen::MatrixXd& est_resample, const double confidence) {
             // This method implicitly assume normal distributions.
-            double inv_cdf = stats::inv_normal_cdf(confidence);
+            double inv_cdf = st::inv_normal_cdf(confidence);
             auto s = std_dev(est_resample);
             lower_conf_int_ = res_ - inv_cdf * s;
             upper_conf_int_ = res_ + inv_cdf * s;
@@ -284,12 +284,12 @@ namespace stats {
 
         /// Compute the t-statistic
         /// Compute the means of the two populations
-        auto mean1 = stats::mean(first1, last1);
-        auto mean2 = stats::mean(first2, last2);
+        auto mean1 = st::mean(first1, last1);
+        auto mean2 = st::mean(first2, last2);
 
         /// Compute the variations of the two popuations
-        auto var1 = stats::var(first1, last1);
-        auto var2 = stats::var(first2, last2);
+        auto var1 = st::var(first1, last1);
+        auto var2 = st::var(first2, last2);
 
         /// Compute the sizes of the two populations
         auto size1 = std::distance(first1, last1);
@@ -320,10 +320,10 @@ namespace stats {
             auto x_star = resample(xnew.begin(), xnew.end());
             auto y_star = resample(ynew.begin(), ynew.end());
 
-            auto x_star_mean = stats::mean(x_star.begin(), x_star.end());
-            auto y_star_mean = stats::mean(y_star.begin(), y_star.end());
-            auto x_star_s = stats::var(x_star.begin(), x_star.end());
-            auto y_star_s = stats::var(y_star.begin(), y_star.end());
+            auto x_star_mean = st::mean(x_star.begin(), x_star.end());
+            auto y_star_mean = st::mean(y_star.begin(), y_star.end());
+            auto x_star_s = st::var(x_star.begin(), x_star.end());
+            auto y_star_s = st::var(y_star.begin(), y_star.end());
 
             auto t_star = (x_star_mean - y_star_mean) / (gcem::sqrt(x_star_s / size1 + y_star_s / size2));
             t_star_vec.push_back(t);
