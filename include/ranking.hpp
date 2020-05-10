@@ -22,6 +22,7 @@
  */
 
 /// Standard Library Includes
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <cmath>
@@ -44,7 +45,7 @@ namespace stats {
         int glicko_deviation;
         double glicko_volatility;
 
-        explicit Player(std::string n = "No Name", const int er = 1200, const int eeng = 0, const int gr = 1500, const int gd = 350, const double gv = 0.06) : name(n), elo_rating(er), elo_eff_num_games(eeng), glicko_rating(gr), glicko_deviation(gd), glicko_volatility(gv) {}
+        explicit Player(std::string n = "No Name", const int er = 1200, const int eeng = 0, const int gr = 1500, const int gd = 350, const double gv = 0.06) : name(std::move(n)), elo_rating(er), elo_eff_num_games(eeng), glicko_rating(gr), glicko_deviation(gd), glicko_volatility(gv) {}
 
         friend std::ostream& operator<<(std::ostream& os, const Player& p) {
             os << "Player:" << std::endl;
@@ -65,7 +66,7 @@ namespace stats {
         int result;
         std::string text;
 
-        explicit Match(Player w, Player b, int start, int delay, int incr, int dur = 0, int res = 0, std::string t = "") : white(w), black(b), start_sec(start), incr_sec(incr), delay_sec(delay), duration_sec(dur), result(res), text(t) {}
+        explicit Match(Player w, Player b, int start, int delay, int incr, int dur = 0, int res = 0, std::string t = "") : white(std::move(w)), black(b), start_sec(start), delay_sec(delay), incr_sec(incr), duration_sec(dur), result(res), text(t) {}
 
         friend std::ostream& operator<<(std::ostream& os, const Match& m) {
             os << "[White \"" << m.white.name << "\"]" << std::endl;

@@ -1,5 +1,5 @@
-#ifndef ATROPOS_STATS_HPP
-#define ATROPOS_STATS_HPP
+#ifndef STATS_STATS_HPP
+#define STATS_STATS_HPP
 
 /**
  * TODO:
@@ -703,9 +703,7 @@ namespace stats {
             return std::pow((x - mu) / s, 2.0);
         });
 
-        auto v = var(new_vec.begin(), new_vec.end());
-
-        return v + 1.0 - 3.0;
+        return g1 / (size * std::pow(s, 4)) - 3.0;
     }
 
     /**

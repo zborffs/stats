@@ -41,10 +41,11 @@ auto iqr = stats::interquartile_range(my_data.begin(), my_data.end();
 
 Links
 -----
-| Topic                          | Link                                                          |
-|--------------------------------|:--------------------------------------------------------------|
-|Central Tendency                | https://en.wikipedia.org/wiki/Central_tendency                |
-|Bootstrapping                   | https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29  |
-|Skewness                        | https://en.wikipedia.org/wiki/Skewness                        |
-|Pearson Correlation Coefficient | https://en.wikipedia.org/wiki/Pearson_correlation_coefficient |
-|Glicko2                         | http://www.glicko.net/glicko/glicko2.pdf                      |
+| Topic                          | Link                                                            |
+|--------------------------------|:----------------------------------------------------------------|
+|Central Tendency                | https://en.wikipedia.org/wiki/Central_tendency                  |
+|Bootstrapping                   | https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29    |
+|Skewness                        | https://en.wikipedia.org/wiki/Skewness                          |
+|Pearson Correlation Coefficient | https://en.wikipedia.org/wiki/Pearson_correlation_coefficient   |
+|Glicko2                         | http://www.glicko.net/glicko/glicko2.pdf                        |
+|NIST                            | https://www.itl.nist.gov/div898/handbook/eda/section3/eda35b.htm|

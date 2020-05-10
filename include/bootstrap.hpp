@@ -16,8 +16,8 @@
  * 7.) Write documentation.
  */
 
-#ifndef ATROPOS_BOOTSTRAP_HPP
-#define ATROPOS_BOOTSTRAP_HPP
+#ifndef STATS_BOOTSTRAP_HPP
+#define STATS_BOOTSTRAP_HPP
 
 /// Standard Library Includes
 #include <iterator>
