@@ -9,6 +9,8 @@
 #include <tuple>
 #include <chrono>
 #include <random>
+#include <fstream>
+#include <filesystem>
 
 /// External Library Includes
 #include <gtest/gtest.h>
@@ -21,6 +23,53 @@
 /// This is arbitrary, but std::numeric_limits<double>::min() is like 120 orders of magnitude off.
 constexpr double DESIRED_SIG_FIG_ERROR = 10;
 constexpr double ERROR = 0.5 * gcem::pow(10, 2 - DESIRED_SIG_FIG_ERROR);
+
+std::vector<std::string> split(const std::string& str, const char delim) {
+    std::vector<std::string> ret;
+    std::string::const_iterator first  = str.cbegin();
+    std::string::const_iterator second = str.cbegin();
+
+    for(; second <= str.end(); ++second) {
+        if(*(second) == delim || second == str.end()) {
+            if(second != first) {
+                ret.emplace_back(first, second);
+            }
+
+            first = second + 1;
+        }
+    }
+
+    return ret;
+}
+std::vector<std::string> read_file(const std::string& file_name) {
+    std::vector<std::string> lines;
+
+    try {
+        std::fstream in(file_name);
+        in.exceptions(std::ifstream::badbit);
+        if(!in.is_open()) {
+            std::string err("Failed to open file: ");
+            err += file_name;
+            throw std::runtime_error(err);
+        }
+
+        std::string line;
+        for(int i = 1; std::getline(in, line); i++) {
+            lines.push_back(line);
+        }
+
+        if(in.bad()) {
+            throw std::runtime_error("Runtime error in read_fen_from_file(const std::string&, const uint32): Badbit file.");
+        }
+
+        in.close();
+
+    } catch(const std::exception& e) {
+        throw;
+    }
+
+    return lines;
+}
 
 class StatsTester : public ::testing::Test {
 protected:
@@ -472,7 +521,38 @@ TEST_F(StatsTester, HarmonicMean) {
 }
 
 TEST_F(StatsTester, TStatstic) {
+    /// NIST Example
+    auto current_path = std::filesystem::current_path();
+    std::string t_stat_test_file = current_path.string() + "/../../test/res/t_test.dat";
+    std::vector<std::string> lines;
 
+    try {
+        lines = read_file(t_stat_test_file);
+    } catch (...) {
+        std::cout << "Exiting!" << std::endl;
+    }
+
+    std::vector<std::string> split_line;
+    std::vector<int> american_cars;
+    std::vector<int> japanese_cars;
+
+    for (int i = 0; i < lines.size(); i++) {
+        split_line = split(lines[i], ' ');
+        /// i happen to know there are only two items in this vector
+        for (int j = 0; j < split_line.size(); j++) {
+            if (j == 0) {
+                american_cars.push_back(std::stoi(split_line[j]));
+            } else if (j == 1) {
+                japanese_cars.push_back(std::stoi(split_line[j]));
+            }
+        }
+    }
+
+    auto T = st::t_statistic(american_cars.begin(), american_cars.end(), japanese_cars.begin(), japanese_cars.end());
+    std::cout << "T: " << T << std::endl;
+    EXPECT_NEAR(T, -12.62059, 0.4);
+    bool rej = st::two_samp_t_test(american_cars.begin(), american_cars.end(), japanese_cars.begin(), japanese_cars.end());
+    EXPECT_EQ(rej, true);
 }
 
 TEST_F(StatsTester, TwoSampleTTest) {
@@ -488,52 +568,3 @@ int main(int argc, char **argv) {
     return RUN_ALL_TESTS();
 }
 
-/**
-
-TEST_CASE("bootstrap") {
-	std::vector<double> sample_data({0.1, 0.2, 0.3, 0.4, 0.5});
-
-	SUBCASE("resample") {
-		auto sample = moirai::resample(sample_data.begin(), sample_data.end());
-
-		bool contains;
-		for(auto itr = sample.begin(); itr != sample.end(); ++itr) {
-			contains = false;
-			for(auto itr2 = sample_data.begin(); itr2 != sample_data.end(); ++itr2) {
-				if(*itr == *itr2) {
-					contains = true;
-					break;
-				}
-			}
-
-			CHECK(contains == true);
-		}
-	}
-
-	SUBCASE("build_historgram") {
-		using SDType = std::vector<double>::value_type;
-		using Itr = std::vector<double>::iterator;
-		std::function<SDType(Itr, Itr)> mid = moirai::median<Itr>;
-		auto histogram = moirai::build_histogram<Itr, decltype(mid)>(sample_data.begin(), sample_data.end(), mid, 1000);
-
-		CHECK(histogram.size() == 1000);
-
-		// octave.
-		// for(auto p : histogram) {
-		// 	std::cout << std::setw(2)
-          //         << p.first << ' ' << std::string(p.second / 20, '*') << '\n';
-		// }
-	}
-
-	SUBCASE("bootstrap") {
-		using SDType = std::vector<double>::value_type;
-		using Itr = std::vector<double>::iterator;
-		std::function<SDType(Itr, Itr)> mid = moirai::median<Itr>;
-		auto conf = moirai::bootstrap<Itr, decltype(mid)>(sample_data.begin(), sample_data.end(), mid, 0.95, 100000);
-
-		CHECK(conf.confidence == 0.95);
-		std::cout << "lower_bound: " << conf.lower_bound << ", upper_bound: " << conf.upper_bound << std::endl;
-		// verify with octave maybe?
-	}
-}
- */

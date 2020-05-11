@@ -5,8 +5,6 @@
  * TODO:
  * 1.) Implement multithreading
  * 2.) Implement functions using Eigen::MatrixX(i,d,f) and Eigen::VectorX(i,d,f)
- * 3.) Write documentation for each funciton
- * 4.) Test skewness functions.
  * 5.) Iterative algorithms (updates with every new element or collection of elements)
  * 6.) Write Kendall rank correlation coefficient algorithm
  * 7.) Write Spearmans' rank correlation coefficient algorithm
@@ -814,13 +812,14 @@ namespace st {
     }
 
     /**
-     *
+     * Not tested. (the tests assume equal variance so return wrong results)
+     * Computes the two-sample t-test
      * @tparam T
      * @param x_first
      * @param x_last
      * @param y_first
      * @param y_last
-     * @return
+     * @return true if you should reject the null hypothesis, false if you should NOT reject the null hypothesis
      */
     template <class Iterator>
     constexpr bool two_samp_t_test(Iterator x_first, Iterator x_last, Iterator y_first, Iterator y_last, double alpha = 0.05) {
@@ -863,6 +862,5 @@ namespace st {
         return ret / std::distance(first, last);
     }
 };
-
 
 #endif //ATROPOS_STATS_HPP

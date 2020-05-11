@@ -63,3 +63,53 @@ int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+
+/**
+
+TEST_CASE("bootstrap") {
+	std::vector<double> sample_data({0.1, 0.2, 0.3, 0.4, 0.5});
+
+	SUBCASE("resample") {
+		auto sample = moirai::resample(sample_data.begin(), sample_data.end());
+
+		bool contains;
+		for(auto itr = sample.begin(); itr != sample.end(); ++itr) {
+			contains = false;
+			for(auto itr2 = sample_data.begin(); itr2 != sample_data.end(); ++itr2) {
+				if(*itr == *itr2) {
+					contains = true;
+					break;
+				}
+			}
+
+			CHECK(contains == true);
+		}
+	}
+
+	SUBCASE("build_historgram") {
+		using SDType = std::vector<double>::value_type;
+		using Itr = std::vector<double>::iterator;
+		std::function<SDType(Itr, Itr)> mid = moirai::median<Itr>;
+		auto histogram = moirai::build_histogram<Itr, decltype(mid)>(sample_data.begin(), sample_data.end(), mid, 1000);
+
+		CHECK(histogram.size() == 1000);
+
+		// octave.
+		// for(auto p : histogram) {
+		// 	std::cout << std::setw(2)
+          //         << p.first << ' ' << std::string(p.second / 20, '*') << '\n';
+		// }
+	}
+
+	SUBCASE("bootstrap") {
+		using SDType = std::vector<double>::value_type;
+		using Itr = std::vector<double>::iterator;
+		std::function<SDType(Itr, Itr)> mid = moirai::median<Itr>;
+		auto conf = moirai::bootstrap<Itr, decltype(mid)>(sample_data.begin(), sample_data.end(), mid, 0.95, 100000);
+
+		CHECK(conf.confidence == 0.95);
+		std::cout << "lower_bound: " << conf.lower_bound << ", upper_bound: " << conf.upper_bound << std::endl;
+		// verify with octave maybe?
+	}
+}
+ */
