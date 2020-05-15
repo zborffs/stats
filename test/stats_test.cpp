@@ -536,8 +536,8 @@ TEST_F(StatsTester, TStatstic) {
     std::vector<int> american_cars;
     std::vector<int> japanese_cars;
 
-    for (int i = 0; i < lines.size(); i++) {
-        split_line = split(lines[i], ' ');
+    for (auto & line : lines) {
+        split_line = split(line, ' ');
         /// i happen to know there are only two items in this vector
         for (int j = 0; j < split_line.size(); j++) {
             if (j == 0) {
