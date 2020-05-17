@@ -376,7 +376,6 @@ namespace st {
         }
 
         auto n_minus_1 = std::distance(first, last) - 1;
-
         int i1 = std::floor(n_minus_1 * 0.25);
         int i2 = std::floor(n_minus_1 * 0.50);
         int i3 = std::floor(n_minus_1 * 0.75);
@@ -463,13 +462,17 @@ namespace st {
         using itr_type = typename std::iterator_traits<Iterator>::value_type;
 
         /// can't do auto [...] b/c q1 and q3 are later referenced inside lambda expression
+        std::sort(first, last);
         auto tuple = quartiles(first, last);
-        auto q1 = std::get<0>(tuple);
-        auto q3 = std::get<2>(tuple);
-        auto iqr = q3 - q1;
-        std::unordered_set<itr_type > ret;
+        double q1 = std::get<0>(tuple);
+        double q3 = std::get<2>(tuple);
+//        std::cout << "Q1: " << q1 << ", Q3: " << q3 << std::endl;
+        double iqr = q3 - q1;
+        std::unordered_set<itr_type> ret;
         std::copy_if(first, last, std::inserter(ret, ret.begin()), [=](itr_type v) {
-            return (v > q3 + iqr * 1.5) || (v < q1 - iqr * 1.5);
+//            std::cout << v << " <? " << (q1 - iqr * 1.5) << std::endl;
+//            std::cout << v << " >? " << (q3 + iqr * 1.5) << std::endl;;
+            return ((double)v > q3 + iqr * 1.5) || ((double)v < q1 - iqr * 1.5);
         });
 
         return ret;
@@ -577,6 +580,25 @@ namespace st {
 
     /**
      * Not Tested.
+     * finds the variance of a Eigen::VectorXd given the vector's mean
+     * @param vec the Eigen::VectorXd
+     * @param mean the vector's mean
+     * @return the variance
+     */
+    double var(const Eigen::VectorXd& v, const double mean) {
+        int N = v.size();
+        double acc = 0.0;
+
+        for (int i = 0; i < N; i++) {
+            auto diff = v(i) - mean;
+            acc += diff * diff;
+        }
+
+        return acc / (N - 1);
+    }
+
+    /**
+     * Not Tested.
      * finds the variance of a Eigen::MatrixXd
      * @param vec the Eigen::MatrixXd
      * @return the variance
@@ -616,13 +638,24 @@ namespace st {
     }
 
     /**
-     * Not Tested.
+     * Tested.
      * finds the standard deviation of a Eigen::VectorXd
      * @param vec the Eigen::VectorXd
      * @return the standard deviation
      */
     double std_dev(const Eigen::VectorXd& v) {
         return std::sqrt(var(v));
+    }
+
+    /**
+     * Not Tested.
+     * finds the standard deviation of a Eigen::VectorXd given its mean
+     * @param v the Eigen::VectorXd
+     * @param mean the mean of the input vector
+     * @return the standard deviation
+     */
+    double std_dev(const Eigen::VectorXd& v, const double mean) {
+        return std::sqrt(var(v, mean));
     }
 
     /**
@@ -769,11 +802,12 @@ namespace st {
             }
 
             int deg_of_freedom = std::distance(f_i, l_i) - 1;
-            rsd_sum += std::pow(st::std_dev(f_i, l_i) / st::mean(f_i, l_i), 2) * (deg_of_freedom);
+            auto mu = st::mean(f_i, l_i);
+            rsd_sum += std::pow(st::std_dev(f_i, l_i, mu) / mu, 2) * (deg_of_freedom);
             deg_sum += deg_of_freedom;
         }
 
-        return sqrt(rsd_sum / deg_sum);
+        return std::sqrt(rsd_sum / deg_sum);
     }
 
     /**
