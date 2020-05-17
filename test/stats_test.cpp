@@ -107,6 +107,8 @@ protected:
     std::vector<int> vector_int_even_sorted;
     std::vector<double> vector_double_odd_repeat_unsorted;
     std::vector<float> vector_float_odd_repeat_sorted;
+    std::vector<double> x1; std::vector<double> y1;
+    std::vector<double> x2; std::vector<double> y2;
 
     const std::vector<const int> sizes{{2, 4, 8, 16, 128, 1024}};
     std::default_random_engine e;
@@ -120,6 +122,10 @@ protected:
         vector_int_even_sorted = std::vector<int> ({3, 5, 7, 9});
         vector_double_odd_repeat_unsorted = std::vector<double>({5, 1, 6, 6});
         vector_float_odd_repeat_sorted = std::vector<float>({-1, 0, 0, 0, 4, 4, 0});
+        x1 = std::vector<double>({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}); // evenly spaced
+        y1 = std::vector<double>({2, 4, 6, 8, 10, 12, 14, 16, 18, 20}); // Pearson Coefficient of 1
+        x2 = std::vector<double>({1, 3, 4, 7, 14, 20}); // Not evenly spaced
+        y2 = std::vector<double>({-2, -6, -8, -14, -28, -40}); // Pearson Coefficient of -1;
 
         /// instantiate a random number generator and a normal distribution, itself seeded by uniform real distributions
         /// for the mean and standard deviation
@@ -765,9 +771,9 @@ TEST_F(StatsTester, TStatsticAndTwoSampleTTest) {
 }
 
 /**
- * Tests the pears_corr_coeff(...) function on predefined NIST data
+ * Tests the pears_corr_coeff(...) function on randomly generated data
  */
-TEST_F(StatsTester, PearsonCorrelationCoeff) {
+TEST_F(StatsTester, PearsonCorrelationCoeffRandom) {
 #ifdef NDEBUG
     /// makes sure that an std::logic_error is thrown if operating on an empty vector and debugging is off
     ASSERT_THROW(st::pears_corr_coeff(vector_empty.begin(), vector_empty.end()), std::logic_error);
@@ -799,6 +805,19 @@ TEST_F(StatsTester, PearsonCorrelationCoeff) {
         double stl_ans = st::pears_corr_coeff(stl_data_1.begin(), stl_data_1.end(), stl_data_2.begin());
         EXPECT_NEAR(stl_ans, gsl_ans, ERROR);
     }
+}
+
+/**
+ * Tests the pears_corr_coeff(...) function on a predefined data set
+ */
+TEST_F(StatsTester, PearsonCorrelationCoeffPredefined) {
+    /// X First
+    EXPECT_NEAR(1.0, st::pears_corr_coeff(x1.begin(), x1.end(), y1.begin()), ERROR);
+    EXPECT_NEAR(-1.0, st::pears_corr_coeff(x2.begin(), x2.end(), y2.begin()), ERROR);
+
+    /// Y First
+    EXPECT_NEAR(1.0, st::pears_corr_coeff(y1.begin(), y1.end(), x1.begin()), ERROR);
+    EXPECT_NEAR(-1.0, st::pears_corr_coeff(y2.begin(), y2.end(), x2.begin()), ERROR);
 }
 
 int main(int argc, char **argv) {

@@ -27,8 +27,6 @@ constexpr double ERROR = 0.5 * gcem::pow(10, 2 - DESIRED_SIG_FIG_ERROR);
 class InterpolationTester : public ::testing::Test {
 protected:
     std::vector<double> vector_empty;
-    std::vector<double> x1; std::vector<double> y1;
-    std::vector<double> x2; std::vector<double> y2;
 
     const std::vector<const int> sizes{{2, 4, 8, 16, 128, 1024}};
     std::default_random_engine e;
@@ -38,10 +36,6 @@ protected:
     virtual void SetUp() {
         /// Initialize some of the input vectors with standard test data
         vector_empty = std::vector<double> ({});
-        x1 = std::vector<double>({1, 2, 3, 4, 5, 6, 7, 8, 9, 10}); // evenly spaced
-        y1 = std::vector<double>({2, 4, 6, 8, 10, 12, 14, 16, 18, 20}); // Pearson Coefficient of 1
-        x2 = std::vector<double>({1, 3, 4, 7, 14, 20}); // Not evenly spaced
-        y2 = std::vector<double>({-2, -6, -8, -14, -28, -40}); // Pearson Coefficient of -1;
 
         /// instantiate a random number generator and a normal distribution, itself seeded by uniform real distributions
         /// for the mean and standard deviation
