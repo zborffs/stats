@@ -533,7 +533,7 @@ namespace st {
     }
 
     /**
-     * Not Tested.
+     * Tested.
      * computes the variance of a dataset given its mean
      * @tparam Iterator
      * @param first
@@ -579,7 +579,7 @@ namespace st {
     }
 
     /**
-     * Not Tested.
+     * Tested.
      * finds the variance of a Eigen::VectorXd given the vector's mean
      * @param vec the Eigen::VectorXd
      * @param mean the vector's mean
@@ -598,7 +598,7 @@ namespace st {
     }
 
     /**
-     * Not Tested.
+     * Tested.
      * finds the variance of a Eigen::MatrixXd
      * @param vec the Eigen::MatrixXd
      * @return the variance
@@ -648,7 +648,7 @@ namespace st {
     }
 
     /**
-     * Not Tested.
+     * Tested.
      * finds the standard deviation of a Eigen::VectorXd given its mean
      * @param v the Eigen::VectorXd
      * @param mean the mean of the input vector
@@ -659,7 +659,7 @@ namespace st {
     }
 
     /**
-     * Not Tested.
+     * Tested.
      * finds the standard deviation of a Eigen::MatrixXd
      * @param vec the Eigen::MatrixXd
      * @return the standard deviation
@@ -742,7 +742,7 @@ namespace st {
     }
 
     /**
-     * Not Tested.
+     * Tested.
      * computes the Pearson correlation coefficient of a dataset
      * @tparam Iterator the type of elements in the dataset
      * @param first pointer to the first element in the container
@@ -811,7 +811,7 @@ namespace st {
     }
 
     /**
-     * Not Tested.
+     * Tested.
      * computes the t-statistic between two data sets
      * @tparam Iterator an iterator of the collection storing the data sets
      * @param x_first an iterator to the beginning of the first data set
@@ -839,7 +839,7 @@ namespace st {
     }
 
     /**
-     * Not tested. (the tests assume equal variance so return wrong results)
+     * Tested. (the tests assume equal variance so return wrong results)
      * Computes the two-sample t-test
      * @tparam T
      * @param x_first
