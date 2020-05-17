@@ -717,29 +717,22 @@ namespace st {
      * @return the Pearson correlation coefficient
      */
     template <class Iterator>
-    constexpr auto pears_corr_coeff(Iterator first1, Iterator last1, Iterator first2, Iterator last2) {
+    constexpr auto pears_corr_coeff(Iterator first1, Iterator last1, Iterator first2) {
         using ret_type = typename std::iterator_traits<Iterator>::value_type;
-        if(first1 == last1 || first2 == last2) {
+        if(first1 == last1) {
             throw std::logic_error("Attempting to find pearson correlation coefficient of empty set.");
         }
-        auto size1 = std::distance(first1, last1);
-        auto size2 = std::distance(first2, last2);
+        auto size = std::distance(first1, last1);
+        auto last2 = first2 + size;
 
-        assert(size1 > 0 && size2 > 0 && size1 == size2);
-        if(size1 <= 0 || size2 <= 0 || size1 != size2) {
-            throw std::logic_error("Comparing disjoint populations in Pearson Correlation Coefficient Function.");
-        }
-
-        // These lines are inefficient, because we end up computing the
-        // arithemetic mean twice per population.
         auto mu1 = mean(first1, last1);
         auto mu2 = mean(first2, last2);
         auto s1 = std_dev(first1, last1, mu1);
         auto s2 = std_dev(first2, last2, mu2);
 
-        auto s = std::transform_reduce(first1, last1, first2, std::plus<ret_type>(), [=](auto i1, auto i2) {
+        auto s = std::inner_product(first1, last1, first2, 0.0, std::plus<ret_type>(), [=](auto i1, auto i2) {
             return (i1 - mu1) * (i2 - mu2);
-        });
+        }) / (size - 1);
 
         return s / (s1 * s2);
     }

@@ -555,12 +555,41 @@ TEST_F(StatsTester, TStatstic) {
     EXPECT_EQ(rej, true);
 }
 
-TEST_F(StatsTester, TwoSampleTTest) {
-
-}
-
+/**
+ * Tests the pears_corr_coeff(...) function on predefined NIST data
+ */
 TEST_F(StatsTester, PearsonCorrelationCoeff) {
+#ifdef NDEBUG
+    /// makes sure that an std::logic_error is thrown if operating on an empty vector and debugging is off
+    ASSERT_THROW(st::pears_corr_coeff(vector_empty.begin(), vector_empty.end()), std::logic_error);
+    ASSERT_THROW(st::pears_corr_coeff(vector_double_odd_sorted.begin(), vector_double_odd_sorted.begin()), std::logic_error);
+#endif // NDEBUG
 
+    /// for each element of differently sized, randomly generated input data, computes the mean using this library's
+    /// implementation and compares it to the gsl library's implementation to test for correctness
+    for (int size : sizes) {
+        /// initializes input data
+        double gsl_data_1[size];
+        double gsl_data_2[size];
+        std::vector<double> stl_data_1(size);
+        std::vector<double> stl_data_2(size);
+        for (int j = 0; j < size; j++) {
+            double datum = d(e);
+            gsl_data_1[j] = datum;
+            stl_data_1[j] = datum;
+        }
+        for (int j = 0; j < size; j++) {
+            double datum = d(e);
+            gsl_data_2[j] = datum;
+            stl_data_2[j] = datum;
+        }
+
+        /// computes the mean using the gsl function and the two st:: methods (one for STL objects, the other for
+        /// Eigen::VectorXds)
+        double gsl_ans = gsl_stats_correlation(gsl_data_1, 1, gsl_data_2, 1, size);
+        double stl_ans = st::pears_corr_coeff(stl_data_1.begin(), stl_data_1.end(), stl_data_2.begin());
+        EXPECT_NEAR(stl_ans, gsl_ans, ERROR);
+    }
 }
 
 int main(int argc, char **argv) {
