@@ -24,3 +24,4 @@ option(BENCH_TESTS "Benchmark Tests" ON)
 
 add_subdirectory(benchmarks)
 add_subdirectory(test)
+add_subdirectory(example/exam)

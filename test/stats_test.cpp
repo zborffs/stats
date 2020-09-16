@@ -4,7 +4,6 @@
 
 /// Standard Library Includes
 #include <array>
-#include <cmath>
 #include <vector>
 #include <tuple>
 #include <chrono>
@@ -733,7 +732,7 @@ TEST_F(StatsTester, HarmonicMean) {
  * Tests the t_statistic(...) and two_samp_t_test(...) functions on predefined NIST data
  */
 TEST_F(StatsTester, TStatsticAndTwoSampleTTest) {
-    /// Path to file with NIST datat
+    /// Path to file with NIST data
     auto current_path = std::filesystem::current_path();
     std::string t_stat_test_file = current_path.string() + "/../../test/res/t_test.dat";
     std::vector<std::string> lines;

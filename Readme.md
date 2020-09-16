@@ -31,7 +31,7 @@ g++ -Iinclude ... main.cpp -o main
 ```
 5.    Include the headers when needed.
 ```c++
-#include "st/st.hpp"
+#include "st/stats.hpp"
 
 std::vector<double> my_data;
 ...

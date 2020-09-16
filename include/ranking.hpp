@@ -5,10 +5,6 @@
 #ifndef STATS_RANKING_HPP
 #define STATS_RANKING_HPP
 
-//
-// Created by Zach Bortoff on 2020-03-08.
-//
-
 /**
  * TODO:
  * 1.) Implement multithreading
